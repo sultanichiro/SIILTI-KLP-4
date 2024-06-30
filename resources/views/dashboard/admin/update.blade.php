@@ -7,10 +7,10 @@
             <h2 class="text-gray-600 font-bold">Ubah Data Admin</h2>
         </div>
 
-        <form action="/ubah-admin/{{$admin->id}}" method="POST" class="w-1/2 mt-5">
+        <form action="/ubah-admin/{{$admin->id}}" method="POST" class="w-full mt-5">
             @csrf
             <div class="mt-3">
-                <label class="text-sm text-gray-600" for="name">Nama Admin</label>
+                <label class="text-sm text-gray-600" for="name">Nama</label>
                 <div class="border-2 p-1 @error('name')  border-red-400  @enderror">
                     <input autocomplete="off" name="name" value="{{$admin->name}}" class="w-full h-full focus:outline-none text-sm" id="name" type="text">
                 </div>
@@ -19,7 +19,7 @@
                 @enderror
             </div>
             <div class="mt-3">
-                <label class="text-sm text-gray-600" for="email">Email Admin</label>
+                <label class="text-sm text-gray-600" for="email">Email</label>
                 <div class="@error('email')  border-red-400  @enderror border-2 p-1">
                     <input autocomplete="off" type="email" value="{{$admin->email}}"  name="email" class="text-sm w-full h-full focus:outline-none" id="email" type="text">
                 </div>
@@ -28,7 +28,7 @@
                 @enderror
             </div>
             <div class="mt-3">
-                <label class="text-sm text-gray-600" for="password">Password Admin</label>
+                <label class="text-sm text-gray-600" for="password">Password</label>
                 <div class="@error('password')  border-red-400  @enderror border-2 p-1">
                     <input autocomplete="off" type="password" value="{{old('password')}}"  name="password" class="text-sm w-full h-full focus:outline-none" id="password" type="text">
                 </div>

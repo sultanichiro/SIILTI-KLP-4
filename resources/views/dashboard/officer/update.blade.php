@@ -7,7 +7,7 @@
             <h2 class="text-gray-600 font-bold">Edit Data Pengguna</h2>
         </div>
 
-        <form action="/ubah-petugas/{{$officer->id}}" method="POST" class="w-1/2 mt-5">
+        <form action="/ubah-petugas/{{$officer->id}}" method="POST" class="w-full mt-5">
             @csrf
             <div class="mt-3">
                 <label class="text-sm text-gray-600" for="name">Nama</label>

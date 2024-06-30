@@ -12,9 +12,11 @@
             <div class="flex justify-between">
                 <div class="text-left">
                     <h2 class="text-gray-600 font-bold">Data Barang Masuk</h2>
-                    <a href="/input-barang-masuk" class="text-sm bg-gray-700 text-white block mt-2 px-2 py-1">Input Barang Masuk</a>
+                    <a href="/input-barang-masuk" class="text-sm inline-block bg-blue-700 text-white px-2 py-1 items-center justify-center">
+                        <i class="ri-add-line"></i>
+                    </a>
                 </div>
-                <form method="get" action="/supplier" class="form">
+                <form method="get" action="/barang-masuk" class="form">
                     <div class="flex">
                         <div class="border p-1 px-2 rounded-l">
                           <input id="search" name="search" class="focus:outline-none text-sm" type="text" placeholder="search">
@@ -30,7 +32,7 @@
                         <td class="p-2">No</td>
                         <td class="p-2">Nama Barang</td>
                         <td class="p-2">Nama Admin</td>
-                        <td class="p-2">Nama Supplier</td>
+                        <td class="p-2">Supplier</td>
                         <td class="p-2">Jumlah Barang Masuk</td>
                         <td class="p-2">Tanggal Masuk</td>
                         <td class="p-2">Aksi</td>
@@ -40,7 +42,7 @@
                     @foreach ($productsIncome as $productIncome)
                     <tr class="border-b-2 p-2">
                         <td class="p-2">1</td>
-                        <td class="p-2">{{$productIncome->product->name}}</td>
+                        <td class="p-2">({{$productIncome->product->kode_barang}}){{$productIncome->product->name}}</td>
                         <td class="p-2">{{$productIncome->user->name}}</td>
                         <td class="p-2">{{$productIncome->supplier->name}}</td>
                         <td class="p-2">{{$productIncome->quantity}}</td>
@@ -49,7 +51,7 @@
                             <button data-id="{{$productIncome->id}}" class="btn-delete-product-income bg-red-500 py-1 px-4 rounded text-white">
                                 <i class="ri-delete-bin-line"></i>
                             </button>
-                            <a href="/ubah-barang-masuk/{{$productIncome->id}}" class="bg-yellow-400 py-1 px-4 rounded text-white">
+                            <a href="/edit-barang-masuk/{{$productIncome->id}}" class="bg-yellow-400 py-1 px-4 rounded text-white">
                                 <i class="ri-edit-box-line"></i>
                             </a>
                         </td>

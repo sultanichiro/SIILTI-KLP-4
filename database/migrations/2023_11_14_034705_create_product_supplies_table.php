@@ -18,9 +18,11 @@ return new class extends Migration
             $table->foreignId('product_id');
             $table->foreignId('user_id');
             $table->foreignId('supplier_id');
+            $table->string('name');
             $table->integer('quantity');
             $table->enum('type',['income', 'outcome']);
             $table->date('date');
+            $table->string('desc')->nullable();
 
             $table->foreign('product_id')->references('id')->on('products');
             $table->foreign('user_id')->references('id')->on('users');

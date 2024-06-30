@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\CategoryExport;
+// use Maatwebsite\Excel\Facades\Excel;
+// use App\Exports\CategoryExport;
 use Illuminate\Http\Request;
 
 
@@ -68,7 +68,7 @@ class CategoryController extends Controller
         }
     }
 
-    public function exportExcel () {
-        return Excel::download(new CategoryExport, 'categories.xlsx');
-    }
+    // public function exportExcel () {
+    //     return Excel::download(new CategoryExport, 'categories.xlsx');
+    // }
 }

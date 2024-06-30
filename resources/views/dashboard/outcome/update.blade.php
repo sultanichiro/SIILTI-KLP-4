@@ -7,7 +7,7 @@
             <h2 class="text-gray-600 font-bold">Ubah Data Barang Keluar</h2>
         </div>
 
-        <form action="/ubah-barang-keluar/{{$productOutcome->id}}" method="POST" class="w-1/2 mt-5">
+        <form action="/ubah-barang-keluar/{{$productOutcome->id}}" method="POST" class="w-full mt-5">
             @csrf
             <div class="flex gap-1 mt-3">
                 <div class="w-full">
@@ -15,16 +15,6 @@
                     <div class="border">
                         {{-- select with choice js --}}
                         <select name="product_id" data-id-product="{{$productOutcome->product_id}}"  class="select-product text-black" id="">
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="flex gap-1 mt-3">
-                <div class="w-full">
-                    <label class="text-sm text-gray-600"  for="category">Nama Supplier</label>
-                    <div class="border">
-                        {{-- select with choice js --}}
-                        <select data-id-supplier="{{$productOutcome->supplier_id}}" name="supplier_id" class="select-supplier text-black" id="">
                         </select>
                     </div>
                 </div>
@@ -45,6 +35,24 @@
                 </div>
                  @error('date')
                     <p class="italic text-red-500 text-sm mt-1">{{$message}}</p>
+                @enderror
+            </div>
+            <div class="mt-3">
+                <label class="text-sm text-gray-600" for="name">Nama Mahasiswa</label>
+                <div class="border-2 p-1 @error('name') border-red-400 @enderror">
+                    <input name="name" value="{{$productOutcome->name}}" class="w-full h-full focus:outline-none text-sm" id="name" type="text">
+                </div>
+                @error('name')
+                    <p class="italic text-red-500 text-sm mt-1">{{$message}}</p>
+                @enderror
+            </div>
+            <div class="mt-3">
+                <label class="text-sm text-gray-600" for="desc">Keterangan</label>
+                <div class="border-2 p-1 @error('desc') border-red-400 @enderror">
+                    <textarea name="desc" class="text-black w-full h-20 focus:outline-none text-sm" id="desc">{{ old('desc', $productOutcome    ->desc) }}</textarea>
+                </div>
+                @error('desc')
+                    <p class="italic text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror
             </div>
             <div class="mt-3">

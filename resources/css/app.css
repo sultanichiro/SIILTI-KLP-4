@@ -1,3 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Impor eksternal seperti Choices.js CSS */
+@import url('https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css');
+
+/* Impor Tailwind setelah eksternal CSS */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* Gaya khusus untuk Choices.js */
+.choices__inner {
+    border-radius: 0.375rem; /* sesuai dengan border-radius Tailwind */
+    border-color: #d1d5db; /* sesuai dengan border color Tailwind (gray-300) */
+}
+
+.choices__list--single {
+    padding: 0.25rem; /* sesuai dengan padding Tailwind (p-1) */
+}
+
+.choices__list--dropdown .choices__item--selectable {
+    padding: 0.5rem; /* sesuai dengan padding Tailwind (p-2) */
+}

@@ -53,6 +53,13 @@ return [
             'password' => env('DB_PASSWORD', ''),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
+            'dump' => [
+		   'dump_binary_path' => 'C:\xampp\mysql\bin', // only the path, so without `mysqldump` or `pg_dump`
+		   'use_single_transaction',
+		   'timeout' => 60 * 5, // 5 minute timeout
+		  // 'exclude_tables' => ['table1', 'table2'],
+		   //'add_extra_option' => '--optionname=optionvalue', // for example '--column-statistics=0'
+            ],
             'collation' => null,
             'prefix' => '',
             'prefix_indexes' => true,

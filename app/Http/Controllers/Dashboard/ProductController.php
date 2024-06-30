@@ -11,7 +11,12 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Supplier;
 use App\Models\Category;
+use App\Models\Ruangan;
 use Illuminate\Support\Facades\Process;
+use Exel;
+use App\Imports\UserImports;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Imports\ProductImport;
 
 class ProductController extends Controller
 {
@@ -31,7 +36,19 @@ class ProductController extends Controller
             ->paginate(10);
         }
 
+        if ($request->get('export') == 'pdf'){
+            $pdf = Pdf::loadView('pdf.products', ['products' => $products]);
+            return $pdf->stream('data barang.pdf');   
+        }
+
         return view('dashboard.products.index', ['products'=>$products]);
+    }
+
+    public function importPDF()
+    {
+        // $products = Product::all();
+        $pdf = Pdf::loadView('dashboard.products.pdf', ['products'=>Product::all()]);
+        return $pdf->stream('product.pdf');
     }
 
     public function delete ($id) {
@@ -48,61 +65,95 @@ class ProductController extends Controller
     public function create () {
         $category = Category::all();
         $supplier = Supplier::all();
-        return view('dashboard.products.input', ['categories'=> $category, 'suppliers'=>$supplier]);
+        $ruangan  = Ruangan::all();
+        return view('dashboard.products.input', ['categories'=> $category, 'suppliers'=>$supplier, 'ruangans'=>$ruangan]);
     }
 
-    public function store (Request $request) {
-        $validated = $this->validate($request,[
-            'name'=>['required'],
-            'price'=>['required'],
-            'image'=>['required', 'image','max:1024'],
-            'category_id'=>['required'],
+    public function store(Request $request) {
+        $validated = $this->validate($request, [
+            'kode_barang'  => ['required'],
+            'name'         => ['required'],
+            'price'        => ['required'],
+            'image'        => ['required', 'image', 'max:1024', 'mimes:png,jpg,jpeg'],
+            'category_id'  => ['required'],
+            'room_id'      => ['required'],
         ]);
-
-        $imagePath = $request->file('image')->store('products');
-
+    
+        $image = $request->file('image');
+        $filename = date('Y-m-d').$image->getClientOriginalName();
+        $path = 'foto_barang/'.$filename;
+    
+        Storage::disk('public')->put($path, file_get_contents($image));
+    
         $created = Product::create([
-            'name'=>$request->name,
-            'price'=>$request->price,
-            'image'=>$imagePath,
-            'category_id'=>$request->category_id,
+            'kode_barang'  => $request->kode_barang,
+            'name'         => $request->name,
+            'price'        => $request->price,
+            'image'        => $filename,
+            'category_id'  => $request->category_id,
+            'room_id'      => $request->room_id,
         ]);
-        if($created){
+    
+        if ($created) {
             return redirect('/barang')->with('message', 'berhasil menambahkan data');
         }
     }
+    
+    public function show($id)
+    {
+        $product = Product::findOrFail($id);
+        return view('dashboard.products.show', compact('product'));
+    }
+
 
     public function edit ($id) {
-        $product = Product::findOrFail($id);
+        $product  = Product::findOrFail($id);
         $category = Category::all();
         $supplier = Supplier::all();
-        return view('dashboard.products.update', ["product"=>$product, 'categories'=>$category,'suppliers'=>$supplier]);
+        $ruangan  = Ruangan::all(); 
+        return view('dashboard.products.update', [
+            "product"=>$product, 
+            'categories'=>$category,
+            'suppliers'=>$supplier, 
+            'ruangans'=>$ruangan
+        ]);
     }
 
-    public function update (Request $request, $id) {
-        $validated = $this->validate($request,[
-            'name'=>['required'],
-            'price'=>['required'],
-            'category_id'=>['required'],
-            'image'=>['required', 'image', 'max:1024']
+    public function update(Request $request, $id) {
+        $validated = $this->validate($request, [
+            'kode_barang'  => ['required'],
+            'name'         => ['required'],
+            'price'        => ['required'],
+            'category_id'  => ['required'],
+            'room_id'      => ['required'],
+            'image'        => ['required', 'image', 'max:1024', 'mimes:png,jpg,jpeg'],
         ]);
-
+    
         $productWithId = Product::findOrFail($id);
-        Storage::delete($productWithId->image);
-        $imagePath = $request->file('image')->store('products');
+    
+        // Hapus gambar lama jika ada
+        Storage::disk('public')->delete('foto_barang/'.$productWithId->image);
+    
+        $image = $request->file('image');
+        $filename = date('Y-m-d').$image->getClientOriginalName();
+        $path = 'foto_barang/'.$filename;
+    
+        Storage::disk('public')->put($path, file_get_contents($image));
+    
         $updated = $productWithId->update([
-            'name'=>$request->name,
-            'price'=>$request->price,
-            'stock'=>$request->stock,
-            'image'=>$imagePath,
-            'category_id'=>$request->category_id,
+            'kode_barang'  => $request->kode_barang,
+            'name'         => $request->name,
+            'price'        => $request->price,
+            'image'        => $filename,
+            'category_id'  => $request->category_id,
+            'room_id'      => $request->room_id,
         ]);
-
-        if($updated){
+    
+        if ($updated) {
             return redirect('/barang')->with('message', 'berhasil update data');
         }
-
     }
+    
 
     public function getAllProducts () {
         $products = Product::all();
@@ -111,5 +162,62 @@ class ProductController extends Controller
 
     public function exportExcel () {
         return Excel::download(new ProductExport, 'product.xlsx');
+    }
+
+    public function getImportExcel () {
+        return view('dashboard.products.import');
+    }
+
+    public function importProduct(Request $request){
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls', // Validasi untuk jenis file yang diunggah
+        ]);
+
+        try {
+            Excel::import(new ProductImport(), $request->file('file'));
+
+            return redirect('/barang')->with('success', 'Data Barang berhasil diimpor.');
+        } catch (\Exception $e) {
+            return redirect('/barang')->with('error', 'Terjadi kesalahan saat mengimpor data barang: ' . $e->getMessage());
+        }
+    }
+
+    public function massDelete(Request $request)
+{
+    $ids = $request->input('selected_products');
+    if (!empty($ids)) {
+        // Hapus data yang berhubungan di tabel product_supplies
+        DB::table('product_supplies')->whereIn('product_id', $ids)->delete();
+        
+        // Hapus data di tabel products
+        Product::whereIn('id', $ids)->delete();
+        return redirect()->back()->with('message', 'Selected products deleted successfully.');
+    }
+    return redirect()->back()->with('message', 'No products selected.');
+}
+
+
+    public function indexhome (Request $request) {
+        if($request->has('search')){
+            $products = DB::table('products')
+            ->join('categories', 'products.category_id', '=' , 'categories.id')
+            ->where('products.name', "LIKE","%{$request->search}%")
+            ->select('products.*','categories.name as category')
+            ->orderBy('products.created_at')
+            ->paginate(10);
+        } else {
+             $products = DB::table('products')
+            ->join('categories', 'products.category_id', '=' , 'categories.id')
+            ->select('products.*','categories.name as category')
+            ->orderBy('products.created_at')
+            ->paginate(10);
+        }
+
+        if ($request->get('export') == 'pdf'){
+            $pdf = Pdf::loadView('pdf.products', ['products' => $products]);
+            return $pdf->stream('data barang.pdf');   
+        }
+
+        return view('layouts.barang', ['products'=>$products]);
     }
 }

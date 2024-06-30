@@ -11,9 +11,10 @@
         <div class="bg-white mt-5 p-5 rounded-lg">
             <div class="flex justify-between">
                 <div class="text-left">
-                    <h2 class="text-gray-600 font-bold">Data Kategori</h2>
-                    <a href="/input-kategori" class="text-sm bg-gray-700 text-white inline-block mt-2 px-2 py-1">Input Kategori</a>
-                    <a  class="text-sm bg-gray-700 text-white inline-block mt-2 px-2 py-1" href="/excel/kategori">Export Excel</a>
+                    <h2 class="text-gray-600 font-bold">Data Kategori</h2>  
+                    <a href="/input-kategori" class="text-sm inline-block bg-blue-700 text-white px-2 py-1 items-center justify-center">
+                        <i class="ri-add-line"></i>
+                    </a>
                 </div>
                 <form method="get" action="/kategori" class="form">
                     <div class="flex">
