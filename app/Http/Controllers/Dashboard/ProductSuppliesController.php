@@ -8,6 +8,7 @@ use App\Models\Supplier;
 use App\Models\ProductSupplies;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ProductSuppliesController extends Controller
 {
@@ -195,4 +196,35 @@ class ProductSuppliesController extends Controller
         $productOutcome = ProductSupplies::findOrFail($id);
         return view('dashboard.outcome.show', compact('productOutcome'));
     }
+
+    public function importPDFbm()
+    {
+        $productsIncome = ProductSupplies::with('product')->get();
+        $products = Product::all();
+
+        $pdf = PDF::loadView('dashboard.income.pdf', [
+            'productsIncome' => $productsIncome,
+            'products' => $products
+        ]);
+
+        return $pdf->download('laporan-barang-masuk.pdf');
+    }
+
+    public function importPDFbk()
+    {
+        $productsOutcome = ProductSupplies::with('product')->get();
+        $products = Product::all();
+        $supplier = Supplier::all();
+
+        $pdf = PDF::loadView('dashboard.outcome.pdf', [
+            'productsOutcome' => $productsOutcome,
+            'products' => $products,
+            'supplier' => $supplier
+        ]);
+
+        return $pdf->download('laporan-barang-keluar.pdf');
+    }
+
+
+
 }

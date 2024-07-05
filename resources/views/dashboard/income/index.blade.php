@@ -12,9 +12,14 @@
             <div class="flex justify-between">
                 <div class="text-left">
                     <h2 class="text-gray-600 font-bold">Data Barang Masuk</h2>
+                    @can('view_peminjaman')
                     <a href="/input-barang-masuk" class="text-sm inline-block bg-blue-700 text-white px-2 py-1 items-center justify-center">
                         <i class="ri-add-line"></i>
                     </a>
+                    <a href="/import_pdfbm" target="_blank" class="text-sm inline-block bg-red-700 text-white px-2 py-1 items-center justify-center">
+                        <i class="ri-file-pdf-line mr-2"></i>
+                    </a>
+                    @endcan
                 </div>
                 <form method="get" action="/barang-masuk" class="form">
                     <div class="flex">

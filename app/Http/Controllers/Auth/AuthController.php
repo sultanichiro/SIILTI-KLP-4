@@ -10,6 +10,8 @@ use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class AuthController extends Controller
 {
@@ -114,7 +116,6 @@ class AuthController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:8',
-            'role' => 'required|in:admin,pimpinan,dosen,mahasiswa', // Sesuaikan dengan role yang tersedia
         ]);
         
 
@@ -123,6 +124,9 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+
+        // Menambahkan peran ke pengguna
+        $user->assignRole('mahasiswa');
 
         return redirect('/login')->with('success', 'Pendaftaran berhasil! Silakan login.');
     }

@@ -14,12 +14,16 @@ class MahasiswaImport implements ToModel, WithHeadingRow
     {
         
         return new Mahasiswa([
-            'nim' => $row['NIM'],
-            'name' => $row['Nama'],
-            'jurusan' => $row['Jurusan'],
-            'prodi' => $row['Program_Studi'],
-            'angkatan' => $row['Angkatan'],
-            // 'email' => $row['Email'],
+            'nim' => $row['nim'],
+            'name' => $row['name'],
+            'jurusan' => $row['jurusan'] ?? null,
+            'prodi' => $row['prodi'],
+            'angkatan' => $row['angkatan'],
+            'email' => $row['email'] ?? null, // Nilai default jika tidak ada
+            'kode_jurusan' => $row['kode_jurusan'] ?? null,
+            'kode_prodi' => $row['kode_prodi'] ?? null,
+            'no_telp' => $row['no_telp'] ?? null,
+            'alamat' => $row['alamat'] ?? null,
             // Tambahkan field lain yang diperlukan dari file Excel
         ]);
 

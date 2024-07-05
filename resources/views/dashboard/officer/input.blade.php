@@ -39,7 +39,8 @@
             <div class="mt-3">
                 <label class="text-sm text-gray-600" for="role">Role</label>
                 <div class="@error('role') border-red-400 @enderror border-2 p-1">
-                    <select name="role" class="w-full h-full focus:outline-none text-sm" id="role">
+                    <select name="role" class="select-role text-black w-full" id="select-role">
+                        <option value="" disabled selected>Pilih Role</option>
                         @foreach ($roles as $role)
                             @if ($role->name !== 'admin') {{-- Mengecualikan role admin --}}
                                 <option value="{{ $role->name }}">{{ ucfirst($role->name) }}</option>
@@ -57,4 +58,19 @@
         </form>
     </div>
 </div>
+@endsection
+
+@section('js')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const selectRole = document.getElementById('select-role');
+
+        const choicesRole = new Choices(selectRole, {
+            searchEnabled: true,
+            itemSelectText: '',
+            placeholderValue: 'Pilih Role',
+            removeItemButton: true,
+        });
+    });
+</script>
 @endsection

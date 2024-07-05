@@ -36,6 +36,7 @@
                     <th class="p-2">Jumlah</th>
                     <th class="p-2">Waktu Mulai</th>
                     <th class="p-2">Waktu Selesai</th>
+                    <th class="p-2">Sisa Peminjaman</th>
                     <th class="p-2">Aksi</th>
                 </tr>
             </thead>
@@ -51,6 +52,24 @@
                         <td class="p-2">{{$loan->quantity}}</td>
                         <td class="p-2">{{$loan->tanggal_peminjaman}}</td>
                         <td class="p-2">{{$loan->tanggal_pengembalian ? $loan->tanggal_pengembalian : '-'}}</td> 
+                        <td class="p-2">
+                            @if ($loan->tanggal_pengembalian)
+                                @php
+                                    $now = now();
+                                    $dueDate = \Carbon\Carbon::parse($loan->tanggal_pengembalian);
+                                    $remainingDays = $now->diffInDays($dueDate);
+                                @endphp
+                                @if ($remainingDays < 0)
+                                    <span class="text-red-500">Telat {{ abs($remainingDays) }} hari</span>
+                                @elseif ($remainingDays === 0)
+                                    <span class="text-yellow-500">Hari ini</span>
+                                @else
+                                    <span class="text-green-500">Sisa {{ $remainingDays }} hari</span>
+                                @endif
+                            @else
+                                -
+                            @endif
+                        </td>
                         <td class="p-2 flex gap-2">
                             <form action="{{ route('delete_loan', $loan) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus?')">
                                 @csrf

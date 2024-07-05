@@ -119,4 +119,16 @@ class DosenController extends Controller
 
         return redirect()->route('dosen')->with('message', 'Data dosen berhasil dihapus.');
     }
+
+    public function massDelete(){
+        try {
+            // Lakukan penghapusan semua data di tabel mahasiswa
+            Dosen::truncate();
+            // Jika berhasil, kembalikan respons atau pesan sukses
+            return redirect('/mahasiswa')->with('message', 'Semua data mahasiswa berhasil dihapus');
+        } catch (\Exception $e) {
+            // Tangani jika terjadi error
+            return response()->json(['error' => 'Gagal menghapus data mahasiswa: ' . $e->getMessage()], 500);
+        }
+    }
 }

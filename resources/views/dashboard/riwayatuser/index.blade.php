@@ -33,6 +33,7 @@
                     <th class="p-2">Jumlah</th>
                     <th class="p-2">Waktu Mulai</th>
                     <th class="p-2">Waktu Selesai</th>
+                    <th class="p-2">Sisa Peminjaman</th>
                     <th class="p-2">Masukan</th>
                 </tr>
             </thead>
@@ -48,9 +49,30 @@
                         <td class="p-2">{{$loan->quantity}}</td>
                         <td class="p-2">{{$loan->tanggal_peminjaman}}</td>
                         <td class="p-2">{{$loan->tanggal_pengembalian ? $loan->tanggal_pengembalian : '-'}}</td> 
+                        <td class="p-2">
+                            @if ($loan->tanggal_pengembalian)
+                                @php
+                                    $now = now();
+                                    $dueDate = \Carbon\Carbon::parse($loan->tanggal_pengembalian);
+                                    $remainingDays = $now->diffInDays($dueDate);
+                                @endphp
+                                @if ($remainingDays < 0)
+                                    <span class="text-red-500">Telat {{ abs($remainingDays) }} hari</span>
+                                @elseif ($remainingDays === 0)
+                                    <span class="text-yellow-500">Hari ini</span>
+                                @else
+                                    <span class="text-green-500">Sisa {{ $remainingDays }} hari</span>
+                                @endif
+                            @else
+                                -
+                            @endif
+                        </td>
                         <td class="p-2 flex gap-2">
-                            <a href="/saran-barang-user/{{ $loan->id }}" class="bg-blue-500 py-1 px-4 rounded text-white">
+                            <a href="/saran-barang-user/{{ $loan->id }}" class="bg-red-500 py-1 px-4 rounded text-white">
                                 <i class="ri-information-line"></i>
+                            </a>
+                            <a href="{{ route('kembalikan.barang', ['id' => $loan->id]) }}" class="bg-green-500 py-1 px-4 rounded text-white kembalikan-barang" data-id="{{ $loan->id }}">
+                                <i class="ri-arrow-go-back-line"></i>
                             </a>
                         </td>
                     </tr>
@@ -66,4 +88,33 @@
     </div>
 </div>
 
-@endsection    
+@endsection
+
+@section('js')
+<script>
+   document.addEventListener('DOMContentLoaded', function() {
+       const kembalikanButtons = document.querySelectorAll('.kembalikan-barang');
+       
+       kembalikanButtons.forEach(button => {
+           button.addEventListener('click', function(e) {
+               e.preventDefault();
+               
+               const loanId = this.getAttribute('data-id');
+               
+               Swal.fire({
+                   title: 'Konfirmasi Pengembalian Barang',
+                   text: 'Apakah Anda yakin ingin mengembalikan barang ini?',
+                   icon: 'question',
+                   showCancelButton: true,
+                   confirmButtonText: 'Ya, Kembalikan',
+                   cancelButtonText: 'Batal'
+               }).then((result) => {
+                   if (result.isConfirmed) {
+                       window.location.href = `/kembalikan-barang/${loanId}`;
+                   }
+               });
+           });
+       });
+   });
+</script>
+@endsection

@@ -14,19 +14,20 @@ class UserImport implements ToModel, WithHeadingRow
     public function model(array $row)
     {
         $user = User::updateOrCreate(
-            ['email' => $row['Email']], // Kriteria untuk mencari atau membuat pengguna baru
+            ['email' => $row['email']], // Kriteria untuk mencari atau membuat pengguna baru
             [
-                'name' => $row['Nama'],
-                'password' => Hash::make('12345678'),
+                'name' => $row['name'],
+                'password' => Hash::make('12345678'), // Password default, bisa disesuaikan dengan kebutuhan
                 // Tambahkan field lain yang diperlukan dari file Excel
             ]
         );
 
-        // Menetapkan peran (role) untuk pengguna
-        if (!empty($row['Peran'])) {
-            $role = Role::where('name', $row['Peran'])->first();
+         // Menetapkan peran (role) untuk pengguna
+         if (!empty($row['role'])) {
+            $roleName = strtolower($row['role']); // Mengonversi ke lowercase untuk memastikan kesesuaian case sensitive
+            $role = Role::where('name', $roleName)->first();
             if ($role) {
-                $user->assignRole($role);
+                $user->syncRoles([$role->name]); // Menggunakan syncRoles untuk memastikan hanya role yang diinginkan yang diberikan kepada pengguna
             }
         }
 

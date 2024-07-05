@@ -6,3 +6,6 @@ window.axios = axios;
 
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
+import { initClockwork } from '@clockwork/browser';
+
+initClockwork();

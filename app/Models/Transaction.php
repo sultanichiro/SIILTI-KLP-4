@@ -29,4 +29,9 @@ class Transaction extends Model
     {
         return $this->belongsTo(Product::class);
     }
+    
+    public function returns()
+    {
+        return $this->hasMany(Returns::class);
+    }
 }

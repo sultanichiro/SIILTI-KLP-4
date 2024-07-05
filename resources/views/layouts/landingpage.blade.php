@@ -52,7 +52,7 @@
             <img src="/siilti.jpeg" alt="logo" class="w-24 h-24 rounded-full mx-auto mb-4 object-cover">
             <h1 class="text-4xl font-bold text-gray-900 mb-2">Selamat Datang di SIILTI</h1>
             <p class="text-lg text-gray-700 mb-4">Sistem Informasi Inventarisasi Laboratorium Teknologi Informasi</p>
-            <a href="/register" class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700">Mulai Peminjamanmu</a>
+            <a href="/login" class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700">Mulai Peminjamanmu</a>
          </div>
       </main>
       <!-- End Main Content -->

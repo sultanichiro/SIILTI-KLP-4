@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Activitylog\Models\Activity;
 
 class TransactionController extends Controller
 {
@@ -28,6 +29,9 @@ class TransactionController extends Controller
         $validatedData = $request->validate([
             'product_id'    => 'required|integer|exists:products,id',
             'quantity'      => 'required|integer|min:1',
+            'tanggal_pengembalian' => 'required|date|after_or_equal:' . now()->addDay(1)->format('Y-m-d\TH:i'),
+        ], [
+            'tanggal_pengembalian.after_or_equal' => 'Tanggal pengembalian harus setidaknya 3 hari dari sekarang.',
         ]);
 
         // Periksa apakah stok cukup
@@ -43,6 +47,7 @@ class TransactionController extends Controller
         $transaction->product_id = $request->product_id;
         $transaction->quantity = $request->quantity;
         $transaction->tanggal_peminjaman = now();
+        $transaction->tanggal_pengembalian = $request->tanggal_pengembalian;
         $transaction->save();  
 
         // Kurangi stok produk
@@ -108,24 +113,33 @@ class TransactionController extends Controller
     {
         return view('dashboard.loan.inputuser',['products'=>Product::all()]);;
     }
+
     public function storeLoanUser(Request $request)
     {
         // Validasi input
         $validatedData = $request->validate([
             'product_id'    => 'required|integer|exists:products,id',
             'quantity'      => 'required|integer|min:1',
+            'tanggal_pengembalian' => 'required|date|after_or_equal:' . now()->addDay(1)->format('Y-m-d\TH:i'),
+        ], [
+            'tanggal_pengembalian.after_or_equal' => 'Tanggal pengembalian harus setidaknya 1 hari dari sekarang.',
         ]);
 
+        
         // Periksa apakah stok cukup
         $product = Product::findOrFail($request->product_id);
         if ($product->stock < $request->quantity) {
-            return redirect()->back()->withErrors(['quantity' => 'Not enough stock available.']);
+            return redirect('/input-loan-barang-user')->withErrors(['quantity' => 'Not enough stock available.']);
         }
+
+        // Kurangi stok produk
+        $product->stock -= $request->quantity;
+        $product->save();
 
         // Simpan transaksi
         $transaction = new Transaction;
         $transaction->name = Auth::user()->name;
-        $transaction->user_id = Auth::user()->id;
+        $transaction->user_id = auth()->user()->id;
         $transaction->product_id = $request->product_id;
         $transaction->quantity = $request->quantity;
         $transaction->tanggal_peminjaman = now();
@@ -162,5 +176,22 @@ class TransactionController extends Controller
         } else {
             return redirect('/riwayat-loan-barang')->with('error', 'Gagal menyimpan saran atau komentar.');
         }
+    }
+
+    public function kembalikanBarang($id)
+    {
+        // Temukan transaksi peminjaman berdasarkan ID
+        $loan = Transaction::findOrFail($id);
+
+        // Tambahkan kembali stok produk
+        $product = Product::findOrFail($loan->product_id);
+        $product->stock += $loan->quantity;
+        $product->save();
+
+        // Ubah status transaksi menjadi telah dikembalikan
+        $loan->tanggal_pengembalian = now();
+        $loan->save();
+
+        return redirect('/riwayat-loan-barang')->with('message', 'Barang telah berhasil dikembalikan.');
     }
 }

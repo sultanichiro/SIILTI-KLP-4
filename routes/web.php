@@ -16,6 +16,9 @@ use App\Http\Controllers\Dashboard\DosenController;
 use App\Http\Controllers\Dashboard\LandingpageController;
 use App\Http\Controllers\Dashboard\RuanganController;
 use App\Http\Controllers\Dashboard\LaborController;
+use App\Http\Controllers\Dashboard\ActivityUserController;
+use App\Http\Controllers\Dashboard\BeritaController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -52,6 +55,8 @@ use App\Http\Controllers\Dashboard\LaborController;
 
         // Barang
         Route::get('/barang', [ProductController::class, 'index']);
+        Route::get('/barang-pimpinan', [ProductController::class, 'indexPimpinan']);
+        Route::post('/mass-validate-products', [ProductController::class, 'massValidate'])->name('mass_validate_products');
         Route::get('/input-barang', [ProductController::class, 'create']);
         Route::delete('/hapus-barang/{id}', [ProductController::class, 'delete']);
         Route::post('/input-barang', [ProductController::class, 'store']);
@@ -74,7 +79,6 @@ use App\Http\Controllers\Dashboard\LaborController;
         Route::get('/ubah-supplier/{id}', [SupplierController::class, 'edit']);
         Route::post('/ubah-supplier/{id}', [SupplierController::class, 'update']);
         Route::get('/suppliers',[SupplierController::class,'getAllSuppliers']);
-        // Route::get('/excel/suppliers',[SupplierController::class,'exportExcel']);
 
         // Kategori
         Route::get('/kategori', [CategoryController::class, 'index']);
@@ -83,7 +87,6 @@ use App\Http\Controllers\Dashboard\LaborController;
         Route::delete('/hapus-kategori/{id}', [CategoryController::class, 'delete']);
         Route::get('/ubah-kategori/{id}', [CategoryController::class, 'edit']);
         Route::post('/ubah-kategori/{id}', [CategoryController::class, 'update']);
-        // Route::get('/excel/kategori',[CategoryController::class,'exportExcel']);
 
         // User
         Route::get('/petugas', [UserController::class, 'officer']);
@@ -111,6 +114,7 @@ use App\Http\Controllers\Dashboard\LaborController;
         Route::get('/edit-barang-masuk/{id}', [ProductSuppliesController::class, 'editIncome']);
         Route::post('/update-barang-masuk/{id}', [ProductSuppliesController::class, 'updateIncome'])->name('update_masuk');
         Route::delete('/hapus-barang-masuk/{id}', [ProductSuppliesController::class,'deleteProductSupply']);
+        Route::get('/import_pdfbm',[ProductSuppliesController::class,'importPDFbm']);
 
         // Barang Keluar
         Route::get('/barang-keluar', [ProductSuppliesController::class, 'indexOutcome']);
@@ -120,6 +124,7 @@ use App\Http\Controllers\Dashboard\LaborController;
         Route::get('/edit-barang-keluar/{id}', [ProductSuppliesController::class, 'editOutcome']);
         Route::post('/update-barang-keluar/{id}', [ProductSuppliesController::class, 'updateOutcome'])->name('update_keluar');
         Route::get('/show-barang-keluar/{id}', [ProductSuppliesController::class, 'showProductOutcome'])->name('show-barang-keluar');
+        Route::get('/import_pdfbk', [ProductSuppliesController::class, 'importPDFbk'])->name('import_pdf_bk');
 
         // Peminjaman
         Route::get('/loan-barang', [TransactionController::class, 'indexLoan'])->name('loan_barang');
@@ -137,6 +142,7 @@ use App\Http\Controllers\Dashboard\LaborController;
         Route::post('/store-loan-barang-user', [TransactionController::class, 'storeLoanUser']);
         Route::get('/saran-barang-user/{id}', [TransactionController::class, 'saranLoanUser']);
         Route::post('/store-saran-barang-user/{id}', [TransactionController::class, 'storesaranLoanUser']);
+        Route::get('/kembalikan-barang/{id}', [TransactionController::class, 'kembalikanBarang'])->name('kembalikan.barang');
         
         // Pengembalian
         Route::get('/return-barang', [ReturnsController::class, 'indexReturn'])->name('return_barang');
@@ -159,7 +165,8 @@ use App\Http\Controllers\Dashboard\LaborController;
         Route::get('/excel/mahasiswa',[MahasiswaController::class,'exportExcel']);
         Route::get('/input-import-mahasiswa', [MahasiswaController::class, 'inputImportMahasiswa']);
         Route::post('/import/mahasiswa', [MahasiswaController::class, 'importMahasiswa']);
-        
+        Route::delete('/mahasiswa/mass-delete', [MahasiswaController::class, 'massDelete'])->name('mahasiswa_mass_delete');
+
         // Dosen
         Route::get('/dosen', [DosenController::class, 'indexDosen'])->name('dosen');
         Route::get('/input-dosen', [DosenController::class, 'createDosen'])->name('input_dosen');
@@ -169,6 +176,7 @@ use App\Http\Controllers\Dashboard\LaborController;
         Route::get('/show-dosen/{id}', [DosenController::class, 'showDosen']);
         Route::delete('/hapus-dosen/{id}', [DosenController::class,'deleteDosen']);
         Route::get('/fetch-and-save-dosen', [DosenController::class, 'fetchAndSaveData']);
+        Route::delete('/dosen/mass-delete', [DosenController::class, 'massDelete'])->name('dosen_mass_delete');
 
         // Ruangan
         Route::get('/ruangan', [RuanganController::class, 'indexRuangan'])->name('ruangan');
@@ -186,8 +194,16 @@ use App\Http\Controllers\Dashboard\LaborController;
         Route::put('/update-labor/{id}', [LaborController::class, 'updateLabor']); 
         Route::delete('/hapus-labor/{id}', [LaborController::class,'deleteLabor'])->name('labor_delete');
 
+        // Bug Report
         Route::get('/bug-reports', [BugReportController::class, 'index']);
         Route::post('/store-bug-report', [BugReportController::class, 'storeBugReport']);
+
+        // Activity User
+        Route::get ('/activity-logs', [ActivityUserController::class, 'index']);
+
+        // Berita
+        Route::get('/berita', [BeritaController::class, 'Berita'])->name('berita');
+
 });
     
     //logout

@@ -2,11 +2,14 @@
 
 @section('container')
 
-@if (session('message'))
-   <div id="toast-container" class="hidden fixed z-50 items-center w-full max-w-xs p-4 space-x-4 text-gray-500 bg-white divide-x divide-gray-200 rounded border-l-2 border-green-400 shadow top-5 right-5 dark:text-gray-400 dark:divide-gray-700 space-x dark:bg-gray-800" role="alert">
-    <div class="text-green-400 text-sm font-bold capitalize">{{ session()->get('message') }}</div>
+@if (session('error'))
+   <div id="toast-container" class="fixed z-50 items-center w-full max-w-xs p-4 space-x-4 text-gray-500 bg-white divide-x divide-gray-200 rounded border-l-2 border-red-400 shadow top-5 right-5 dark:text-gray-400 dark:divide-gray-700 space-x dark:bg-gray-800" role="alert">
+    <div class="text-red-400 text-sm font-bold capitalize">
+        {{ session('error') }}
+    </div>
 </div>
 @endif
+
 
 @if ($errors->any())
    <div id="toast-container" class="fixed z-50 items-center w-full max-w-xs p-4 space-x-4 text-gray-500 bg-white divide-x divide-gray-200 rounded border-l-2 border-red-400 shadow top-5 right-5 dark:text-gray-400 dark:divide-gray-700 space-x dark:bg-gray-800" role="alert">

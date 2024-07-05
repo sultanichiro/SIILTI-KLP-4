@@ -31,21 +31,20 @@
    </head>
    <body class="text-black" style="overflow-y: scroll;">
       <!-- Navbar -->
-      <nav class="bg-gray-900 shadow-md py-3 px-6">
-         <div class="container mx-auto flex justify-between items-center">
-            <div class="flex items-center">
-               <img src="/siilti.jpeg" alt="logo" class="w-8 h-8 rounded mr-3 object-cover">
-               <span class="text-lg font-bold text-white">Welcome to SIILTI</span>
-            </div>
-            <ul class="flex items-center space-x-4">
-               <li><a href="/" class="text-white hover:text-gray-200">Home</a></li>
-               <li><a href="/baranghome" class="text-white hover:text-gray-200">Barang</a></li>
-               <li><a href="/login" class="text-white hover:text-gray-200">Login</a></li>
-               <li><a href="/register" class="text-white hover:text-gray-200">Sign Up</a></li>
-            </ul>
-         </div>
-      </nav>
-      <!-- End Navbar -->
+      <nav class="bg-gray-900 shadow-md py-1">
+        <div class="container mx-auto flex justify-between items-center">
+           <div class="flex items-center space-x-2">
+              <a href="/"><alt="logo" class="w-6 h-6 rounded object-cover"></a>
+              <a href="/" class="text-white hover:text-gray-200 text-base">Home</a>
+              <a href="/baranghome" class="text-white hover:text-gray-200 text-base">Barang</a>
+           </div>
+           <ul class="flex items-center space-x-1">
+              <li><a href="/login" class="bg-blue-600 text-white py-1 px-2 rounded-lg hover:bg-blue-700 text-xs">Login</a></li>
+              <li><a href="/register" class="bg-green-600 text-white py-1 px-2 rounded-lg hover:bg-green-700 text-xs">Sign Up</a></li>
+           </ul>
+        </div>
+     </nav>
+     <!-- End Navbar -->
 
       <!-- Main Content -->
       @if (session('message'))
@@ -96,7 +95,7 @@
                         <td class="p-2">Nama Barang</td>
                         <td class="p-2">Jumlah Barang</td>
                         <td class="p-2">Kategori Barang</td>
-                        <td class="p-2">Aksi</td>
+                        <td class="p-2">Detail</td>
                     </tr>
                 </thead>
                 <tbody>

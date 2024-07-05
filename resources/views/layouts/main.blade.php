@@ -24,10 +24,13 @@
    <body class="text-black" style="overflow-y: scroll;">
       
       {{-- sidebar start --}}
-      @include('layouts.sidebar')
+      <div id="sidebar" class="fixed top-0 left-0 h-full bg-gray-800 text-white w-48 transition-width duration-300">
+         <button class="p-4 focus:outline-none" onclick="toggleSidebar()">Toggle Sidebar</button>
+         @include('layouts.sidebar')
+      </div>
       {{-- sidebar end --}}
       
-      <main class="md:w-[calc(100%-192px)] md:ml-48 bg-gray-50 min-h-screen">
+      <main id="main-content" class="md:ml-48 bg-gray-50 min-h-screen transition-margin duration-300">
          {{-- navbar start --}}
          <div class="bg-white py-2 px-4 flex items-center justify-between shadow-md shadow-black/5 sticky top-0 left-0 z-30">
             <ul class="flex items-center text-sm">
@@ -38,6 +41,7 @@
                @endcan
             </ul>
             <div class="relative mr-2 flex items-center">
+               <p class="text-sm text-gray-600">{{Auth::user()->name}}</p>
                <img src="/siilti.jpeg" alt="logo" class="w-8 h-8 rounded-full object-cover cursor-pointer" onclick="showProfileOptions()"/>
             </div>
          </div>
@@ -56,6 +60,23 @@
       @yield('js')
 
       <script>
+         function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            
+            if (sidebar.classList.contains('w-48')) {
+               sidebar.classList.remove('w-48');
+               sidebar.classList.add('w-16');
+               mainContent.classList.remove('md:ml-48');
+               mainContent.classList.add('md:ml-16');
+            } else {
+               sidebar.classList.remove('w-16');
+               sidebar.classList.add('w-48');
+               mainContent.classList.remove('md:ml-16');
+               mainContent.classList.add('md:ml-48');
+            }
+         }
+
          function showProfileOptions() {
             Swal.fire({
                title: 'Profile Options',
@@ -71,44 +92,43 @@
                   const logoutButton = document.getElementById('logoutButton');
 
                   reportBugButton.addEventListener('click', () => {
-               Swal.fire({
-                  title: 'Report Bug',
-                  html: `
-                           <form action="/store-bug-report" method="POST" action="/submit-bug">
-                              @csrf
-                              <!-- Isi formulir report bug -->
-                              <input name="name" value="{{ Auth::user()->name }}" class="text-black w-full h-full focus:outline-none text-sm" id="name" type="text" readonly>
-                              <textarea name="description" id="description" class="w-full h-24 p-2 border border-gray-300 rounded-lg mb-4" placeholder="Enter bug description..."></textarea>
-                              <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-blue-700">Submit</button>
-                           </form>
-
-                  `,
-                  showConfirmButton: false,
-                  showCancelButton: true,
-                  cancelButtonText: 'Cancel',
-                  didOpen: () => {
-                     const submitBugButton = document.getElementById('submitBugButton');
-                     submitBugButton.addEventListener('click', () => {
-                        const description = document.getElementById('description').value;
-                        const user_id = '{{ Auth::user()->id }}'; // Ambil ID pengguna dari Blade template
-                        
-                        // Send bug report using Axios
-                        axios.post('/store-bug-report', {
-                           user_id: user_id,
-                           description: description
-                        })
-                        .then(response => {
-                           console.log(response.data); // Handle success response
-                           Swal.fire('Bug Report Submitted', 'Bug report successfully submitted!', 'success');
-                        })
-                        .catch(error => {
-                           console.error('Error submitting bug report:', error);
-                           Swal.fire('Error', 'Failed to submit bug report', 'error');
-                        });
+                     Swal.fire({
+                        title: 'Report Bug',
+                        html: `
+                                 <form action="/store-bug-report" method="POST" action="/submit-bug">
+                                    @csrf
+                                    <!-- Isi formulir report bug -->
+                                    <input name="name" value="{{ Auth::user()->name }}" class="text-black w-full h-full focus:outline-none text-sm" id="name" type="text" readonly>
+                                    <textarea name="description" id="description" class="w-full h-24 p-2 border border-gray-300 rounded-lg mb-4" placeholder="Enter bug description..."></textarea>
+                                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-blue-700">Submit</button>
+                                 </form>
+                        `,
+                        showConfirmButton: false,
+                        showCancelButton: true,
+                        cancelButtonText: 'Cancel',
+                        didOpen: () => {
+                           const submitBugButton = document.getElementById('submitBugButton');
+                           submitBugButton.addEventListener('click', () => {
+                              const description = document.getElementById('description').value;
+                              const user_id = '{{ Auth::user()->id }}'; // Ambil ID pengguna dari Blade template
+                              
+                              // Send bug report using Axios
+                              axios.post('/store-bug-report', {
+                                 user_id: user_id,
+                                 description: description
+                              })
+                              .then(response => {
+                                 console.log(response.data); // Handle success response
+                                 Swal.fire('Bug Report Submitted', 'Bug report successfully submitted!', 'success');
+                              })
+                              .catch(error => {
+                                 console.error('Error submitting bug report:', error);
+                                 Swal.fire('Error', 'Failed to submit bug report', 'error');
+                              });
+                           });
+                        }
                      });
-                  }
-               });
-            });
+                  });
 
                   logoutButton.addEventListener('click', () => {
                      // Confirm logout
@@ -124,16 +144,14 @@
                      }).then((result) => {
                         if (result.isConfirmed) {
                            // Logout action
-                           window.location.href = '/logout                                                                                                                                                                                                                                                                                                                                     ';
+                           window.location.href = '/logout';
                         }
                      });
                   });
                }
             });
          }
-      </script>
 
-      <script>
          function toggleDropdown(id) {
             document.getElementById(id).classList.toggle('hidden');
          }

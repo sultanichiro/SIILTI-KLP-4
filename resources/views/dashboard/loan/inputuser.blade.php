@@ -7,6 +7,15 @@
             <h2 class="text-gray-600 font-bold">Input Data Peminjaman</h2>
         </div>
 
+        <div class="mt-3">
+            <p class="text-gray-600 text-sm">
+                Batasan Peminjaman:
+                <ul class="list-disc list-inside">
+                    <li>Maksimal durasi peminjaman: 3 hari</li>
+                </ul>
+            </p>
+        </div>
+
         <form action="/store-loan-barang-user" method="POST" enctype="multipart/form-data" class="w-full mt-5">
             @csrf
             <div class="mt-3">
@@ -33,7 +42,7 @@
                 <div class="w-full">
                     <label class="text-sm text-gray-600" for="quantity">Jumlah</label>
                     <div class="@error('quantity') border-red-400 @enderror border-2 p-1">
-                        <input name="quantity" class="text-sm text-black w-full h-full focus:outline-none" id="quantity" type="number">
+                        <input name="quantity" class="text-sm text-black w-full h-full focus:outline-none" id="quantity" type="number" min="1">
                     </div>
                     @error('quantity')
                         <p class="italic text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -42,9 +51,9 @@
             </div>
             <div class="flex gap-1 mt-3">
                 <div class="w-full">
-                    <label class="text-sm text-gray-600" for="tanggal_pengembalian">Tanggal Pengembalian</label>
+                    <label class="text-sm text-gray-600" for="tanggal_pengembalian">Tanggal dan Waktu Pengembalian</label>
                     <div class="border-2 p-1 @error('tanggal_pengembalian') border-red-400 @enderror">
-                        <input name="tanggal_pengembalian" class="text-sm text-black w-full h-full focus:outline-none" id="tanggal_pengembalian" type="date">
+                        <input name="tanggal_pengembalian" class="text-sm text-black w-full h-full focus:outline-none" id="tanggal_pengembalian" type="datetime-local" min="{{ now()->addDay(1)->format('Y-m-d\TH:i') }}">
                     </div>
                     @error('tanggal_pengembalian')
                         <p class="italic text-red-500 text-sm mt-1">{{ $message }}</p>

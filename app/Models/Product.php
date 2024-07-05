@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     use HasFactory;
+
     protected $primaryKey = 'id';
+
     protected $fillable = [
         'kode_barang',
         'name',
@@ -16,18 +18,27 @@ class Product extends Model
         'room_id',
         'stock',
         'price',
-        'image'
+        'image',
+        'desc',
+        'verified'
     ];
 
-    public function category () {
+    public function category()
+    {
         return $this->belongsTo(Category::class);
     }
-    public function transaction () {
+
+    public function transaction()
+    {
         return $this->hasMany(Transaction::class);
     }
+
     public function ruangans()
     {
         return $this->belongsTo(Ruangan::class, 'room_id');
     }
+    public function returns()
+    {
+        return $this->hasMany(Returns::class);
+    }
 }
-

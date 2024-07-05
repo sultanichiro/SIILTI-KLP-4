@@ -45,6 +45,11 @@ class User extends Authenticatable
     ];
 
     public function incomeProduct () {
-        return $this->hasMany(ProductIncome::class);
+        return $this->hasMany(ProductSupplies::class);
+    }
+
+    public function returns()
+    {
+        return $this->hasMany(Returns::class);
     }
 }

@@ -12,9 +12,15 @@
             <div class="flex justify-between">
                 <div class="text-left">
                     <h2 class="text-gray-600 font-bold">Data Barang Keluar</h2>
-                    <a href="/input-barang-keluar" class="text-sm inline-block bg-blue-700 text-white px-2 py-1 items-center justify-center">
-                        <i class="ri-add-line"></i>
-                    </a>
+                    @can('view_peminjaman')
+                        <a href="/input-barang-keluar" class="text-sm inline-block bg-blue-700 text-white px-2 py-1 items-center justify-center">
+                            <i class="ri-add-line"></i>
+                        </a>
+                        <a href="{{ route('import_pdf_bk') }}" target="_blank" class="text-sm inline-block bg-red-700 text-white px-2 py-1 items-center justify-center">
+                            <i class="ri-file-pdf-line mr-2"></i>
+                        </a>
+                        
+                    @endcan    
                 </div>
                 <form method="get" action="//barang-masuk" class="form">
                     <div class="flex">
@@ -33,7 +39,7 @@
                         <td class="p-2">Barang</td>
                         <td class="p-2">Nama Mahasiswa</td>
                         <td class="p-2">Jumlah Barang</td>
-                        <td class="p-2">Tanggal</td>
+                        <td class="p-2">Tanggal Keluar</td>
                         <td class="p-2">Aksi</td>
                     </tr>
                 </thead>
@@ -41,7 +47,7 @@
                     @foreach ($productsOutcome as $productOutcome)
                     <tr class="border-b-2 p-2">
                         <td class="p-2">1</td>
-                        <td class="p-2">{{$productOutcome->product->name}}</td>
+                        <td class="p-2">({{$productOutcome->product->kode_barang}}){{$productOutcome->product->name}}</td>
                         <td class="p-2">{{$productOutcome->name}}</td>
                         <td class="p-2">{{$productOutcome->quantity}}</td>
                         <td class="p-2">{{$productOutcome->date}}</td>

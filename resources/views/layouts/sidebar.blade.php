@@ -13,7 +13,7 @@
        </li>
        @endcan
 
-       @canany(['view_barang', 'view_barang_masuk', 'view_barang_keluar'])
+       @canany(['view_barang', 'view_barang_masuk', 'view_barang_keluar', 'view_barang_pimpinan'])
        <li class="mb-1 group">
           <button type="button" class="flex items-center w-full py-2 px-4 text-gray-300 hover:bg-gray-600 rounded-lg focus:outline-none" onclick="toggleDropdown('barang-dropdown')">
              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" viewBox="0 0 20 20" fill="currentColor">
@@ -27,6 +27,13 @@
              @can('view_barang')
              <li>
                 <a href="/barang" class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-600 rounded-lg">
+                   <span class="text-xs">Data Barang</span>
+                </a>
+             </li>
+             @endcan
+             @can('view_barang_pimpinan')
+             <li>
+                <a href="/barang-pimpinan" class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-600 rounded-lg">
                    <span class="text-xs">Data Barang</span>
                 </a>
              </li>
@@ -49,79 +56,11 @@
        </li>
        @endcanany
 
-       @canany(['view_kategori_barang', 'view_supplier', 'view_ruangan'])
-       <li class="mb-1 group">
-          <button type="button" class="flex items-center w-full py-2 px-4 text-gray-300 hover:bg-gray-600 rounded-lg focus:outline-none" onclick="toggleDropdown('lainnya-dropdown')">
-             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" viewBox="0 0 20 20" fill="currentColor">
-                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-9V6a1 1 0 112 0v3h3a1 1 0 010 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 010-2h3z" clip-rule="evenodd" />
-             </svg>
-             <span class="text-xs">Tambahan</span>
-             <i class="ri-arrow-down-s-line ml-auto text-lg"></i>
-          </button>
-          <ul id="lainnya-dropdown" class="hidden pl-8 mt-1 space-y-1">
-             @can('view_kategori_barang')
-             <li>
-                <a href="/kategori" class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-600 rounded-lg">
-                   <span class="text-xs">Kategori Barang</span>
-                </a>
-             </li>
-             @endcan
-             @can('view_supplier')
-             <li>
-                <a href="/supplier" class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-600 rounded-lg">
-                   <span class="text-xs">Supplier</span>
-                </a>
-             </li>
-             @endcan
-             @can('view_ruangan')
-             <li>
-                <a href="/ruangan" class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-600 rounded-lg">
-                   <span class="text-xs">Ruangan</span>
-                </a>
-             </li>
-             @endcan
-          </ul>
-       </li>
-       @endcanany
-
-       @canany(['view_kategori_berita', 'view_labor', 'view_report'])
-       <li class="mb-1 group">
-          <button type="button" class="flex items-center w-full py-2 px-4 text-gray-300 hover:bg-gray-600 rounded-lg focus:outline-none" onclick="toggleDropdown('information-dropdown')">
-             <i class="ri-information-line mr-3 text-lg"></i>
-             <span class="text-xs">Informasi</span>
-             <i class="ri-arrow-down-s-line ml-auto text-lg"></i>
-          </button>
-          <ul id="information-dropdown" class="hidden pl-8 mt-1 space-y-1">
-             @can('view_kategori_berita')
-             <li>
-                <a href="/barang-masuk" class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-600 rounded-lg">
-                   <span class="text-xs">Berita</span>
-                </a>
-             </li>
-             @endcan
-             @can('view_labor')
-             <li>
-                <a href="/labor" class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-600 rounded-lg">
-                   <span class="text-xs">Labor</span>
-                </a>
-             </li>
-             @endcan
-             @can('view_report')
-             <li>
-                <a href="/bug-reports" class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-600 rounded-lg">
-                   <span class="text-xs">Report</span>
-                </a>
-             </li>
-             @endcan
-          </ul>
-       </li>
-       @endcanany
-
        @canany(['view_peminjaman', 'view_pengembalian', 'view_riwayat_peminjaman', 'view_input_peminjaman'])
        <li class="mb-1 group">
           <button type="button" class="flex items-center w-full py-2 px-4 text-gray-300 hover:bg-gray-600 rounded-lg focus:outline-none" onclick="toggleDropdown('transaction-dropdown')">
              <i class="ri-folder-reduce-fill mr-3 text-lg"></i>
-             <span class="text-xs">Data Dipakai</span>
+             <span class="text-xs">Transaksi</span>
              <i class="ri-arrow-down-s-line ml-auto text-lg"></i>
           </button>
           <ul id="transaction-dropdown" class="hidden pl-8 mt-1 space-y-1">
@@ -157,11 +96,30 @@
        </li>
        @endcanany
 
+       @canany(['view_kategori_berita'])
+       <li class="mb-1 group">
+          <button type="button" class="flex items-center w-full py-2 px-4 text-gray-300 hover:bg-gray-600 rounded-lg focus:outline-none" onclick="toggleDropdown('information-dropdown')">
+             <i class="ri-information-line mr-3 text-lg"></i>
+             <span class="text-xs">Informasi</span>
+             <i class="ri-arrow-down-s-line ml-auto text-lg"></i>
+          </button>
+          <ul id="information-dropdown" class="hidden pl-8 mt-1 space-y-1">
+             @can('view_kategori_berita')
+             <li>
+                <a href="/berita" class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-600 rounded-lg">
+                   <span class="text-xs">Berita</span>
+                </a>
+             </li>
+             @endcan
+          </ul>
+       </li>
+       @endcanany
+
        @role('admin')
        <li class="mb-1 group">
           <button type="button" class="flex items-center w-full py-2 px-4 text-gray-300 hover:bg-gray-600 rounded-lg focus:outline-none" onclick="toggleDropdown('admin-dropdown')">
              <i class="ri-admin-line mr-3 text-lg"></i>
-             <span class="text-xs">Data Role</span>
+             <span class="text-xs">Role</span>
              <i class="ri-arrow-down-s-line ml-auto text-lg"></i>
           </button>
           <ul id="admin-dropdown" class="hidden pl-8 mt-1 space-y-1">
@@ -175,16 +133,11 @@
                    <span class="text-xs">User</span>
                 </a>
              </li>
-             <li>
-                <a href="/activity" class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-600 rounded-lg">
-                   <span class="text-xs">Aktivitas Login</span>
-                </a>
-             </li>
           </ul>
        </li>
        @endrole
 
-       @role('admin|pimpinan')
+       @role('admin')
        <li class="mb-1 group">
           <button type="button" class="flex items-center w-full py-2 px-4 text-gray-300 hover:bg-gray-600 rounded-lg focus:outline-none" onclick="toggleDropdown('user-dropdown')">
              <i class="ri-user-line mr-3 text-lg"></i>
@@ -206,5 +159,39 @@
        </li>
        @endrole
        
+       @canany(['view_kategori_barang', 'view_supplier', 'view_ruangan'])
+       <li class="mb-1 group">
+          <button type="button" class="flex items-center w-full py-2 px-4 text-gray-300 hover:bg-gray-600 rounded-lg focus:outline-none" onclick="toggleDropdown('lainnya-dropdown')">
+             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-3" viewBox="0 0 20 20" fill="currentColor">
+                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-9V6a1 1 0 112 0v3h3a1 1 0 010 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 010-2h3z" clip-rule="evenodd" />
+             </svg>
+             <span class="text-xs">Lainnya</span>
+             <i class="ri-arrow-down-s-line ml-auto text-lg"></i>
+          </button>
+          <ul id="lainnya-dropdown" class="hidden pl-8 mt-1 space-y-1">
+             @can('view_kategori_barang')
+             <li>
+                <a href="/kategori" class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-600 rounded-lg">
+                   <span class="text-xs">Kategori Barang</span>
+                </a>
+             </li>
+             @endcan
+             @can('view_supplier')
+             <li>
+                <a href="/supplier" class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-600 rounded-lg">
+                   <span class="text-xs">Supplier</span>
+                </a>
+             </li>
+             @endcan
+             @can('view_ruangan')
+             <li>
+                <a href="/ruangan" class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-600 rounded-lg">
+                   <span class="text-xs">Ruangan</span>
+                </a>
+             </li>
+             @endcan
+          </ul>
+       </li>
+       @endcanany
     </ul>
  </div>

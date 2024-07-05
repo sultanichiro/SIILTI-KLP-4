@@ -38,7 +38,7 @@ class MahasiswaController extends Controller
                 );
             }
 
-            return redirect()->route('dosen')->with('success', 'Data berhasil diperbarui');
+            return redirect()->route('mahasiswa')->with('success', 'Data berhasil diperbarui');
         } else {
             return response()->json(['message' => 'Data tidak ditemukan'], 404);
         }
@@ -143,6 +143,18 @@ class MahasiswaController extends Controller
             return redirect('/mahasiswa')->with('success', 'Data mahasiswa berhasil diimpor.');
         } catch (\Exception $e) {
             return redirect('/mahasiswa')->with('error', 'Terjadi kesalahan saat mengimpor data mahasiswa: ' . $e->getMessage());
+        }
+    }
+
+    public function massDelete(){
+        try {
+            // Lakukan penghapusan semua data di tabel mahasiswa
+            Mahasiswa::truncate();
+            // Jika berhasil, kembalikan respons atau pesan sukses
+            return redirect('/mahasiswa')->with('message', 'Semua data mahasiswa berhasil dihapus');
+        } catch (\Exception $e) {
+            // Tangani jika terjadi error
+            return redirect('/dosen')->with('error', 'Gagal menghapus data mahasiswa: ');
         }
     }
 }

@@ -15,6 +15,7 @@ class RolePermissionSeeder extends Seeder
         $permissions = [
             'view_dashboard',
             'view_barang',
+            'view_barang_pimpinan',
             'view_barang_masuk',
             'view_barang_keluar',
             'view_kategori_barang',
@@ -65,7 +66,7 @@ class RolePermissionSeeder extends Seeder
             ],
             'pimpinan' => [
                 'view_dashboard',
-                'view_barang',
+                'view_barang_pimpinan',
                 'view_barang_masuk',
                 'view_barang_keluar',
             ],

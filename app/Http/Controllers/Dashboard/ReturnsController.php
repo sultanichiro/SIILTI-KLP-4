@@ -14,7 +14,8 @@ class ReturnsController extends Controller
     public function indexReturn()
     {
         $returns = Returns::with('product')->get();
-        return view('dashboard.return.index', compact('returns'));
+        $transactions = Transaction::has('returns')->with('returns', 'returns.user', 'returns.product')->get();
+        return view('dashboard.return.index', compact('returns','transactions'));
     }
 
     public function createReturn()
