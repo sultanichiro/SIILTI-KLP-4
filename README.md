@@ -2,7 +2,7 @@
 
 Langkah-langkah mendownload:
 1. Buka git bash di folder yang mau di copykan
-- git clone https://github.com/sultanichiro/SIILTI-KLP-4/tree/main
+- git clone https://github.com/sultanichiro/SIILTI-KLP-4
 
 3. Masuk ke dalam folder project:
 - cd SIILTI-KLP-4
@@ -18,7 +18,7 @@ Langkah-langkah mendownload:
 6. Pasang env:
 - cp .env.example .env
 
-7. php artisan generate:key
+7. php artisan key:generate
 
 8. import database ke mysql buat database dulu dengan nama ciro
 
