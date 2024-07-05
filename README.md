@@ -27,3 +27,5 @@ Langkah-langkah mendownload:
 10. npm install *jika sudah terinstall buka terminal baru dan ketik npm run dev
 
 11. php artisan ser
+
+12. Setiap ingin menjalankan aplikasi maka harus npm run dev terlebih dahulu
