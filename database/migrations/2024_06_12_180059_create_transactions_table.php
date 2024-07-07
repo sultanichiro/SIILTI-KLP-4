@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('quantity');
             $table->dateTime('tanggal_peminjaman');
             $table->dateTime('tanggal_pengembalian')->nullable();
+            $table->boolean('back')->default(false);
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');

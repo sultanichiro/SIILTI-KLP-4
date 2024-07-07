@@ -71,13 +71,9 @@
                             @endif
                         </td>
                         <td class="p-2 flex gap-2">
-                            <form action="{{ route('delete_loan', $loan) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn-delete-mahasiswa bg-red-500 py-1 px-4 rounded text-white">
-                                    <i class="ri-delete-bin-line"></i>
-                                </button>
-                            </form>
+                            <button data-id="{{ $loan->id }}" class="btn-delete-loan bg-red-500 py-1 px-4 rounded text-white">
+                                <i class="ri-delete-bin-line"></i>
+                            </button>
                             <a href="/edit-loan-barang/{{$loan->id}}" class="bg-yellow-400 py-1 px-4 rounded text-white">
                                 <i class="ri-edit-box-line"></i>
                             </a>
@@ -95,4 +91,53 @@
     </div>
 </div>
 
-@endsection    
+@section('js')
+    <script src="{{ asset('js/sweetalert.min.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.btn-delete-loan').forEach(button => {
+                button.addEventListener('click', function () {
+                    const loanId = this.dataset.id;
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            fetch(`/hapus-loan-barang/${loanId}`, {
+                                method: 'DELETE',
+                                headers: {
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                                    'Content-Type': 'application/json'
+                                }
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    Swal.fire(
+                                        'Deleted!',
+                                        'Your file has been deleted.',
+                                        'success'
+                                    );
+                                    window.location.reload();
+                                } else {
+                                    Swal.fire(
+                                        'Failed!',
+                                        'There was a problem deleting the loan.',
+                                        'error'
+                                    );
+                                }
+                            });
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+@endsection
+
+@endsection

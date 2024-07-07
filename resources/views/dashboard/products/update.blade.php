@@ -50,15 +50,6 @@
                 </div>
             </div>
             <div class="mt-3">
-                <label class="text-sm text-gray-600" for="stock">Jumlah Barang</label>
-                <div class="@error('stock') border-red-400 @enderror border-2 p-1">
-                    <input value="{{$product->stock}}" name="stock" class="text-sm w-full h-full focus:outline-none" id="stock" type="text">
-                </div>
-                @error('stock')
-                    <p class="italic text-red-500 text-sm mt-1">{{$message}}</p>
-                @enderror
-            </div>
-            <div class="mt-3">
                 <label class="text-sm text-gray-600" for="image">Gambar Barang</label>
                 <div class="@error('image') border-red-400 @enderror border-2 p-1">
                     <input type="file" name="image" class="text-sm w-full h-full focus:outline-none" id="image">

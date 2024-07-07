@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Activitylog\Models\Activity;
+use Carbon\Carbon;
 
 class TransactionController extends Controller
 {
@@ -95,6 +96,15 @@ class TransactionController extends Controller
     
         return redirect('/loan-barang')->with('success', 'Data Peminjaman berhasil diperbarui.');
     }
+
+    public function deleteLoan($id)
+    {
+        $loan = Transaction::findOrFail($id);
+        $loan->delete();
+
+        return response()->json(['success' => true]);
+    }
+
     
     public function RiwayatLoan(Request $request)
     {
@@ -178,20 +188,13 @@ class TransactionController extends Controller
         }
     }
 
-    public function kembalikanBarang($id)
+    public function returnItem($id)
     {
-        // Temukan transaksi peminjaman berdasarkan ID
         $loan = Transaction::findOrFail($id);
-
-        // Tambahkan kembali stok produk
-        $product = Product::findOrFail($loan->product_id);
-        $product->stock += $loan->quantity;
-        $product->save();
-
-        // Ubah status transaksi menjadi telah dikembalikan
-        $loan->tanggal_pengembalian = now();
+        $loan->back = true;
         $loan->save();
 
-        return redirect('/riwayat-loan-barang')->with('message', 'Barang telah berhasil dikembalikan.');
+        return redirect()->back()->with('message', 'Barang berhasil dikembalikan');
     }
+
 }

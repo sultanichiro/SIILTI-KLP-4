@@ -7,8 +7,9 @@
             <h2 class="text-gray-600 font-bold">Ubah Data Barang Keluar</h2>
         </div>
 
-        <form action="/ubah-barang-keluar/{{$productOutcome->id}}" method="POST" class="w-full mt-5">
+        <form action="{{ route('update_keluar', $productOutcome->id) }}" method="POST" class="w-full mt-5">
             @csrf
+            @method('PUT')
             <div class="flex gap-1 mt-3">
                 <div class="w-full">
                     <label class="text-sm text-gray-600"  for="name">Nama Barang</label>
@@ -49,7 +50,7 @@
             <div class="mt-3">
                 <label class="text-sm text-gray-600" for="desc">Keterangan</label>
                 <div class="border-2 p-1 @error('desc') border-red-400 @enderror">
-                    <textarea name="desc" class="text-black w-full h-20 focus:outline-none text-sm" id="desc">{{ old('desc', $productOutcome    ->desc) }}</textarea>
+                    <textarea name="desc" class="text-black w-full h-20 focus:outline-none text-sm" id="desc">{{ old('desc', $productOutcome->desc) }}</textarea>
                 </div>
                 @error('desc')
                     <p class="italic text-red-500 text-sm mt-1">{{ $message }}</p>

@@ -11,6 +11,15 @@
             @csrf
             @method('PUT')
             <div class="mt-3">
+                <label class="text-sm text-gray-600" for="nidn">NIDN</label>
+                <div class="border-2 p-1 @error('nidn') border-red-400 @enderror">
+                    <input name="nidn" value="{{ old('nidn', $dosen->nidn) }}" class="text-black w-full h-full focus:outline-none text-sm" id="nidn" type="text">
+                </div>
+                @error('nidn')
+                    <p class="italic text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+            <div class="mt-3">
                 <label class="text-sm text-gray-600" for="nip">NIP</label>
                 <div class="border-2 p-1 @error('nip') border-red-400 @enderror">
                     <input name="nip" value="{{ old('nip', $dosen->nip) }}" class="text-black w-full h-full focus:outline-none text-sm" id="nip" type="text">

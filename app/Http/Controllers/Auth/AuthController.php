@@ -6,12 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Mail\ResetPasswordMail;
 use App\Models\User;
 use App\Models\ResetPassword;
-use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -56,16 +56,15 @@ class AuthController extends Controller
             // Redirect default jika tidak ada role yang cocok
             return redirect('/login')->with('error', 'Role tidak valid !!');
         }
-
-
     }
 
-    public function forgot_password(){
+    public function forgot_password()
+    {
         return view('auth.forgotpassword');
     }
-    
-    public function forgot_password_process(Request $request){
-        // dd($request->all());
+
+    public function forgot_password_process(Request $request)
+    {
         $customMessage = [
             'email.required' => 'Email tidak boleh kosong',
             'email.email' => 'Email tidak valid',
@@ -73,37 +72,36 @@ class AuthController extends Controller
         ];
 
         $request->validate([
-            'email'     => 'required|email|exists:user,email',
+            'email' => 'required|email|exists:users,email',
         ], $customMessage);
 
+        // Generate token
         $token = Str::random(60);
 
-        PasswordResetToken::updateOrCreate(
+        // Update or create password reset record
+        ResetPassword::updateOrCreate(
             [
                 'email' => $request->email,
             ],
             [
-                'email' => $request->email,
                 'token' => $token,
                 'created_at' => now(),
             ]
         );
 
-        // Log::info('Sending reset password email to: ' . $request->email);
-        // Log::info('Reset password token: ' . $token);
-
-        Mail::to($request->email)->send(new ResetPasswordMail($token));
+        // Send email with reset link
+        try {
+            Mail::to($request->email)->send(new ResetPasswordMail($token));
+        } catch (\Exception $e) {
+            // Handle email sending error
+            Log::error('Gagal mengirim email reset password: ' . $e->getMessage());
+            return redirect()->route('forgot-password')->with('error', 'Gagal mengirim email reset password. Silakan coba lagi nanti.');
+        }
+        
 
         return redirect()->route('forgot-password')->with('success', 'Check your email for a password reset link.');
     }
 
-    public function logout(Request $request)
-    {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-        return redirect('/login');
-    }
 
     public function register()
     {
@@ -117,17 +115,26 @@ class AuthController extends Controller
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:8',
         ]);
-        
 
+        // Create new user
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
-        // Menambahkan peran ke pengguna
+        // Assign role to the user
         $user->assignRole('mahasiswa');
 
         return redirect('/login')->with('success', 'Pendaftaran berhasil! Silakan login.');
     }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('/login');
+    }
 }
+

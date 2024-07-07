@@ -14,7 +14,7 @@
             <div class="mt-3">
                 <label class="text-sm text-gray-600" for="name">Nama Peminjam</label>
                 <div class="border-2 p-1">
-                    <input name="name" value="{{ Auth::user()->name }}" class="text-black w-full h-full focus:outline-none text-sm" id="name" type="text" readonly>
+                    <input name="name" value="{{ $transaction->name }}" class="text-black w-full h-full focus:outline-none text-sm" id="name" type="text" readonly>
                 </div>
             </div>
 

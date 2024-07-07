@@ -21,5 +21,9 @@ class Mahasiswa extends Model
         'no_telp',
         'alamat'
     ];
+    public function updateMahasiswa(array $data)
+    {
+        return $this->update($data);
+    }
 }
 

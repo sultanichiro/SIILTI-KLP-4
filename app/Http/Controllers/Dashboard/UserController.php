@@ -13,89 +13,20 @@ use App\Imports\UserImport;
 
 class UserController extends Controller
 {
-    public function admin () {
+    public function admin() 
+    {
         // Ambil user yang memiliki role 'admin'
         $admins = User::role('admin')->paginate(10);
         return view('dashboard.admin.index', ['admins' => $admins]);
     }
 
-    public function officer (Request $request) {
-        $roles = ['mahasiswa', 'pimpinan', 'dosen_staff'];
-        $query = User::whereHas('roles', function ($query) use ($roles) {
-            $query->whereIn('name', $roles);
-        });
-
-        if ($request->has('search')) {
-            $query->where('name', 'LIKE', "%{$request->search}%");
-        }
-
-        $officers = $query->paginate(10);
-        return view('dashboard.officer.index', ['officers' => $officers]);
-    }
-
-    public function createOfficer () {
-        $roles = Role::all(); // Mengambil semua role
-        return view('dashboard.officer.input', compact('roles'));
-    }
-
-    public function storeOfficer (Request $request) {
-        $this->validate($request, [
-            'name' => ['required'],
-            'email' => ['required', 'email', 'unique:users,email'],
-            'password' => ['required', 'min:6'],
-            'role' => ['required', 'exists:roles,name']
-        ]);
-
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
-
-        $user->assignRole($request->role); // Menetapkan role ke pengguna
-
-        if ($user) {
-            return redirect('/petugas')->with('message', 'Data berhasil ditambahkan');
-        }
-    }
-
-    public function editOfficer ($id) {
-        $officer = User::findOrFail($id);
-        return view('dashboard.officer.update', ['officer' => $officer]);
-    }
-
-    public function updateOfficer (Request $request, $id) {
-        $this->validate($request, [
-            'name' => ['required'],
-            'email' => ['required', 'email'],
-            'password' => ['nullable']
-        ]);
-
-        $officer = User::findOrFail($id);
-
-        if ($request->has('password') && $request->password) {
-            $password = Hash::make($request->password);
-        } else {
-            $password = $officer->password;
-        }
-
-        $updated = $officer->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => $password,
-        ]);
-
-        if ($updated) {
-            $officer->syncRoles(['mahasiswa']);
-            return redirect('/petugas')->with('message', 'data berhasil diubah');
-        }
-    }
-
-    public function createAdmin () {
+    public function createAdmin() 
+    {
         return view('dashboard.admin.input');
     }
 
-    public function storeAdmin (Request $request) {
+    public function storeAdmin(Request $request) 
+    {
         $this->validate($request, [
             'name' => ['required'],
             'email' => ['required', 'email', 'unique:users'],
@@ -114,12 +45,14 @@ class UserController extends Controller
         }
     }
 
-    public function editAdmin ($id) {
+    public function editAdmin($id) 
+    {
         $admin = User::findOrFail($id);
         return view('dashboard.admin.update', ['admin' => $admin]);
     }
 
-    public function updateAdmin (Request $request, $id) {
+    public function updateAdmin(Request $request, $id) 
+    {
         $this->validate($request, [
             'name' => ['required'],
             'email' => ['required', 'email'],
@@ -146,11 +79,108 @@ class UserController extends Controller
         }
     }
 
-    public function exportExcel () {
+    public function officer(Request $request) 
+    {
+        $roles = ['mahasiswa', 'pimpinan', 'dosen_staff'];
+        $query = User::whereHas('roles', function ($query) use ($roles) {
+            $query->whereIn('name', $roles);
+        });
+
+        if ($request->has('search')) {
+            $query->where('name', 'LIKE', "%{$request->search}%");
+        }
+
+        $officers = $query->paginate(10);
+        return view('dashboard.officer.index', ['officers' => $officers]);
+    }
+
+    public function createOfficer() 
+    {
+        $roles = Role::all(); // Mengambil semua role
+        return view('dashboard.officer.input', compact('roles'));
+    }
+
+    public function storeOfficer(Request $request) 
+    {
+        $this->validate($request, [
+            'name' => ['required'],
+            'email' => ['required', 'email', 'unique:users,email'],
+            'password' => ['required', 'min:6'],
+            'role' => ['required', 'exists:roles,name']
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        $user->assignRole($request->role); // Menetapkan role ke pengguna
+
+        if ($user) {
+            return redirect('/petugas')->with('message', 'Data berhasil ditambahkan');
+        }
+    }
+
+    public function editOfficer($id) 
+    {
+        $officer = User::findOrFail($id);
+        $roles = Role::where('name', '<>', 'admin')->get(); 
+        return view('dashboard.officer.update', ['officer' => $officer, 'roles'=>$roles]);
+    }
+
+    public function updateOfficer(Request $request, $id)
+    {
+        $this->validate($request, [
+            'name' => ['required'],
+            'email' => ['required', 'email'],
+        ]);
+    
+        $officer = User::findOrFail($id);
+    
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+        ];
+    
+        if ($request->has('password') && $request->password) {
+            $data['password'] = Hash::make($request->password);
+        }
+    
+        $updated = $officer->update($data);
+    
+        if ($updated) {
+            // Menyinkronkan role jika diperlukan
+            if ($request->has('role')) {
+                // Pastikan role yang dipilih valid
+                $role = $request->role;
+                if (in_array($role, ['pimpinan', 'dosen_staff', 'mahasiswa'])) { // Ganti dengan role yang sesuai
+                    $officer->syncRoles([$role]);
+                } else {
+                    // Handle jika role tidak valid
+                    return redirect()->back()->with('error', 'Role tidak valid.');
+                }
+            }
+            return redirect('/petugas')->with('message', 'Data berhasil diubah');
+        }
+    }
+
+    public function deletePetugas($id)
+    {
+        $officer = User::findOrFail($id);
+        $officer->delete();
+
+        return response()->json(['success' => true]);
+    }
+
+
+    public function exportExcel () 
+    {
         return Excel::download(new UserExport, 'user.xlsx');
     }
 
-    public function input_importOfficer () {
+    public function input_importOfficer () 
+    {
         return view('dashboard.officer.import');
     }
 

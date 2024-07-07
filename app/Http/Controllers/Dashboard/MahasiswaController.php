@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Validation\Rule;
 use App\Exports\MahasiswaExport;
 use App\Imports\MahasiswaImport;
 
@@ -93,22 +94,38 @@ class MahasiswaController extends Controller
         return view('dashboard.mahasiswa.update', compact('mahasiswa'));
     }
 
-    public function updateMahasiswa(Request $request, Mahasiswa $mahasiswa)
-    {
-        $validatedData = $request->validate([
-            'nim' => 'required|unique:mahasiswas,nim,' . $mahasiswa->id,
-            'name' => 'required|string|max:255',
-            'jurusan' => 'required|string|max:255',
-            'angkatan' => 'required|integer|min:1900|max:' . date('Y'),
-            'email' => 'required|email|unique:mahasiswas,email,' . $mahasiswa->id,
+    public function updateMahasiswa(Request $request, $id) {
+        $this->validate($request, [
+            'nim' => 'required|integer|min:1',
+            'name' => 'required',
+            'jurusan' => 'required',
+            'prodi' => 'required',
+            'angkatan' => 'required|integer|min:1900|max:'.date('Y'),
+            'email' => 'required|email',
             'no_telp' => 'required',
-            'alamat' => 'required|string|max:255'
+            'alamat' => 'required',
         ]);
-
-        $mahasiswa->updateMahasiswa($validatedData);
-
-        return redirect()->route('mahasiswa')->with('success', 'Data Mahasiswa berhasil diperbarui.');
+    
+        $mahasiswa = Mahasiswa::findOrFail($id);
+    
+        $updated = $mahasiswa->update([
+            'nim' => $request->nim,
+            'name' => $request->name,
+            'jurusan' => $request->jurusan,
+            'prodi' => $request->prodi,
+            'angkatan' => $request->angkatan,
+            'email' => $request->email,
+            'no_telp' => $request->no_telp,
+            'alamat' => $request->alamat,
+        ]);
+    
+        if ($updated) {
+            return redirect('/mahasiswa')->with('message', 'Data mahasiswa berhasil diupdate');
+        } else {
+            return back()->withErrors(['message' => 'Gagal mengupdate data mahasiswa']);
+        }
     }
+    
 
     public function showMahasiswa($id)
     {
@@ -117,11 +134,16 @@ class MahasiswaController extends Controller
     }
 
     public function deleteMahasiswa($id)
-    {
+{
+    try {
         $mahasiswa = Mahasiswa::findOrFail($id);
         $mahasiswa->delete();
         return redirect()->route('mahasiswa')->with('success', 'Data Mahasiswa berhasil dihapus.');
+    } catch (\Exception $e) {
+        // Menangani pengecualian jika ada kesalahan selama penghapusan
+        return redirect()->route('mahasiswa')->with('error', 'Terjadi kesalahan saat menghapus data mahasiswa.');
     }
+}
 
     public function exportExcel () {
         return Excel::download(new MahasiswaExport, 'mahasiswa.xlsx');
@@ -154,7 +176,7 @@ class MahasiswaController extends Controller
             return redirect('/mahasiswa')->with('message', 'Semua data mahasiswa berhasil dihapus');
         } catch (\Exception $e) {
             // Tangani jika terjadi error
-            return redirect('/dosen')->with('error', 'Gagal menghapus data mahasiswa: ');
+            return redirect('/mahasiswa ')->with('error', 'Gagal menghapus data mahasiswa: ');
         }
     }
 }

@@ -13,9 +13,10 @@ class ReturnsController extends Controller
 {
     public function indexReturn()
     {
-        $returns = Returns::with('product')->get();
-        $transactions = Transaction::has('returns')->with('returns', 'returns.user', 'returns.product')->get();
-        return view('dashboard.return.index', compact('returns','transactions'));
+        $loanReturns = Transaction::where('back', true)->paginate(10, ['*'], 'loanReturnsPage');
+        $manualReturns = Returns::with('transaction', 'product')->paginate(10, ['*'], 'manualReturnsPage');
+
+        return view('dashboard.return.index', compact('loanReturns', 'manualReturns'));
     }
 
     public function createReturn()
@@ -48,10 +49,9 @@ class ReturnsController extends Controller
         return redirect('/return-barang')->with('message', 'Berhasil Mengembalikan Barang.');
     }
 
-    public function saranLoanUser(){
-
-        $transactions = Transaction::where('user_id', auth()->id())->whereNotNull('returned_at')->get();
-        return view('dashboard.return.show');
+    public function saranLoanUser($id)
+    {
+        $transaction = Transaction::findOrFail($id);
+        return view('dashboard.return.show', compact('transaction'));
     }
-
 }

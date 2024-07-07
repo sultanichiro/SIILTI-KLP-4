@@ -4,7 +4,7 @@
 
 @if (session('message'))
    <div id="toast-container" class="hidden fixed z-50 items-center w-full max-w-xs p-4 space-x-4 text-gray-500 bg-white divide-x divide-gray-200 rounded border-l-2 border-green-400 shadow top-5 right-5 dark:text-gray-400 dark:divide-gray-700 space-x dark:bg-gray-800" role="alert">
-    <div class=" text-green-400 text-sm font-bold capitalize">{{session()->get('message')}}</div>
+    <div class=" text-green-400 text-sm font-bold capitalize">{{ session()->get('message') }}</div>
 </div>
 @endif
 
@@ -37,22 +37,46 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($returns as $return)
+                @foreach ($loanReturns as $return)
                 <tr class="border-b p-2">
                     <td class="p-2">{{ $loop->iteration }}</td>
+                    <td class="p-2">{{ $return->user->name }}</td>
+                    <td class="p-2">{{ $return->product->name }}</td>
+                    <td class="p-2">{{ $return->quantity }}</td>
+                    <td class="p-2">{{ $return->tanggal_pengembalian }}</td>
+                    <td class="p-2 flex gap-2">
+                        <a href="/saran-barang-user/{{ $return->id }}" class="bg-orange-500 py-1 px-4 rounded text-white">
+                            <i class="ri-chat-1-line"></i>
+                        </a>
+                    </td>
+                </tr>
+                @endforeach
+                @foreach ($manualReturns as $return)
+                <tr class="border-b p-2">
+                    <td class="p-2">{{ $loop->iteration + $loanReturns->perPage() * ($loanReturns->currentPage() - 1) }}</td>
                     <td class="p-2">{{ $return->transaction->name }}</td>
                     <td class="p-2">{{ $return->product->name }}</td>
                     <td class="p-2">{{ $return->quantity_returned }}</td>
                     <td class="p-2">{{ $return->tanggal_pengembalian }}</td>
                     <td class="p-2 flex gap-2">
-                        <a href="/saran-barang-user/{{ $return->id }}" class="bg-blue-500 py-1 px-4 rounded text-white">
-                            <i class="ri-information-line"></i>
+                        <a href="/saran-barang-user/{{ $return->id }}" class="bg-red-500 py-1 px-4 rounded text-white">
+                            <i class="ri-chat-1-line"></i>
                         </a>
                     </td>
                 </tr>
                 @endforeach
             </tbody>
         </table>
+
+        <!-- Pagination links for loanReturns -->
+        <div class="mt-5">
+            {{ $loanReturns->links('pagination::tailwind') }}
+        </div>
+        
+        <!-- Pagination links for manualReturns -->
+        <div class="mt-5">
+            {{ $manualReturns->links('pagination::tailwind') }}
+        </div>
     </div>
 </div>
 @endsection

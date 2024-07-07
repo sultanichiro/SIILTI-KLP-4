@@ -67,4 +67,53 @@
             </div>
         </div>
     </div>
+
+    @section('js')
+        <script src="{{ asset('js/sweetalert.min.js') }}"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                document.querySelectorAll('.btn-delete-officer').forEach(button => {
+                    button.addEventListener('click', function () {
+                        const officerId = this.dataset.id;
+                        Swal.fire({
+                            title: 'Are you sure?',
+                            text: "You won't be able to revert this!",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Yes, delete it!'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                fetch(`/hapus-petugas/${officerId}`, {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                                        'Content-Type': 'application/json'
+                                    }
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        Swal.fire(
+                                            'Deleted!',
+                                            'Your file has been deleted.',
+                                            'success'
+                                        );
+                                        window.location.reload();
+                                    } else {
+                                        Swal.fire(
+                                            'Failed!',
+                                            'There was a problem deleting the officer.',
+                                            'error'
+                                        );
+                                    }
+                                });
+                            }
+                        });
+                    });
+                });
+            });
+        </script>
+    @endsection
 @endsection

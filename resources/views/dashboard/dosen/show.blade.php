@@ -10,6 +10,12 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="mt-3">
+                <label class="text-sm text-gray-700 font-medium" for="nidn">NIDN</label>
+                <div class="border-2 bg-gray-50 p-3 rounded-lg">
+                    <input name="nidn" value="{{ $dosen->nidn }}" class="text-gray-800 w-full h-full focus:outline-none text-sm bg-transparent" id="nidn" type="text" disabled>
+                </div>
+            </div>
+            <div class="mt-3">
                 <label class="text-sm text-gray-700 font-medium" for="nip">NIP</label>
                 <div class="border-2 bg-gray-50 p-3 rounded-lg">
                     <input name="nip" value="{{ $dosen->nip }}" class="text-gray-800 w-full h-full focus:outline-none text-sm bg-transparent" id="nip" type="text" disabled>

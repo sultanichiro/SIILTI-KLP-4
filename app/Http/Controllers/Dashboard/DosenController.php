@@ -70,6 +70,7 @@ class DosenController extends Controller
     public function storeDosen(Request $request)
     {
         $validatedData = $request->validate([
+            'nidn' => 'required|string|max:255',
             'nip' => 'required|unique:dosens,nip',
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:dosens,email',
@@ -90,19 +91,32 @@ class DosenController extends Controller
         return view('dashboard.dosen.update', compact('dosen'));
     }
 
-    public function updateDosen(Request $request, Dosen $dosen)
-    {
-        $validatedData = $request->validate([
-            'nip' => 'required|unique:dosens,nip,' . $dosen->id,
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:Dosens,email,' . $dosen->id,
+    public function updateDosen(Request $request, $id) {
+        $this->validate($request, [
+            'nidn' => 'required',
+            'nip' => 'required|integer|min:1',
+            'name' => 'required',
+            'email' => 'required|email',
             'no_telp' => 'required',
-            'alamat' => 'required|string|max:255'
+            'alamat' => 'required',
         ]);
-
-        $dosen->updateDosen($validatedData);
-
-        return redirect()->route('dosen')->with('success', 'Data Dosen berhasil diperbarui.');
+    
+        $dosen = Dosen::findOrFail($id);
+    
+        $updated = $dosen->update([
+            'nidn' => $request->nidn,
+            'nip' => $request->nip,
+            'name' => $request->name,
+            'email' => $request->email,
+            'no_telp' => $request->no_telp,
+            'alamat' => $request->alamat,
+        ]);
+    
+        if ($updated) {
+            return redirect('/dosen')->with('message', 'Data dosen berhasil diupdate');
+        } else {
+            return back()->withErrors(['message' => 'Gagal mengupdate data dosen']);
+        }
     }
 
     public function showDosen($id)
@@ -125,10 +139,10 @@ class DosenController extends Controller
             // Lakukan penghapusan semua data di tabel mahasiswa
             Dosen::truncate();
             // Jika berhasil, kembalikan respons atau pesan sukses
-            return redirect('/mahasiswa')->with('message', 'Semua data mahasiswa berhasil dihapus');
+            return redirect('/dosen')->with('message', 'Semua data mahasiswa berhasil dihapus');
         } catch (\Exception $e) {
             // Tangani jika terjadi error
-            return response()->json(['error' => 'Gagal menghapus data mahasiswa: ' . $e->getMessage()], 500);
+            return response()->json(['error' => 'Gagal menghapus data dosen: ' . $e->getMessage()], 500);
         }
     }
 }

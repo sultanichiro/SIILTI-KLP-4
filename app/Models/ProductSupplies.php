@@ -16,7 +16,8 @@ class ProductSupplies extends Model
         'supplier_id',
         'date',
         'quantity',
-        'type'
+        'type',
+        'desc'
     ];
 
     public function supplier () {

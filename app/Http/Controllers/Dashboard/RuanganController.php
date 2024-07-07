@@ -39,14 +39,12 @@ class RuanganController extends Controller
        }
     }
 
-    public function deleteRuangan ($id) {
+    public function deleteRuangan($id)
+    {
         $ruangan = Ruangan::findOrFail($id);
-        $deleted = $ruangan->delete();
+        $ruangan->delete();
 
-        if($deleted) {
-           session()->flash('message', 'berhasil hapus data');
-           return response()->json(['message'=> 'success delete data'],200);
-        }
+        return response()->json(['success' => true]);
     }
 
     public function editRuangan ($id) {

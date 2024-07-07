@@ -11,10 +11,10 @@ class Labor extends Model
 
     protected $fillable = [
         'room_id',
-        'kegiatan',
         'day',
         'date', 
         'time',
+        'kegiatan', 
     ];
 
     public function ruangan()

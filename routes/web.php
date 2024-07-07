@@ -43,7 +43,7 @@ use App\Http\Controllers\Dashboard\BeritaController;
     Route::get('/forgot-password', [AuthController::class, 'forgot_password'])->name('forgot-password');
     Route::post('/forgot-password', [AuthController::class, 'forgot_password_process'])->name('forgot-password-process');
     Route::get('/validasi-forgot-password/{token}', [AuthController::class, 'validasi_forgot_password'])->name('validasi-forgot-password');
-    Route::post('/validasi-forgot-password', [AuthController::class, 'validasi_forgot_password_process'])->name('validasi-forgot-password-process');
+    Route::post('/validasi-forgot-password-act', [AuthController::class, 'validasi_forgot_password_process'])->name('validasi-forgot-password-act');
 
     //register
     Route::get('/register', [AuthController::class, 'register'])->name('register');
@@ -90,7 +90,7 @@ use App\Http\Controllers\Dashboard\BeritaController;
 
         // User
         Route::get('/petugas', [UserController::class, 'officer']);
-        Route::delete('/hapus-petugas/{id}', [UserController::class, 'delete']);
+        Route::delete('/hapus-petugas/{id}', [UserController::class, 'deletePetugas']);
         Route::get('/input-petugas', [UserController::class, 'createOfficer']);
         Route::post('/input-petugas', [UserController::class, 'storeOfficer']);
         Route::get('/ubah-petugas/{id}', [UserController::class, 'editOfficer']);
@@ -122,7 +122,7 @@ use App\Http\Controllers\Dashboard\BeritaController;
         Route::post('/input-barang-keluar', [ProductSuppliesController::class, 'storeOutcome']);
         Route::delete('/hapus-barang-keluar/{id}', [ProductSuppliesController::class,'deleteProductSupply']);
         Route::get('/edit-barang-keluar/{id}', [ProductSuppliesController::class, 'editOutcome']);
-        Route::post('/update-barang-keluar/{id}', [ProductSuppliesController::class, 'updateOutcome'])->name('update_keluar');
+        Route::put('/update-barang-keluar/{id}', [ProductSuppliesController::class, 'updateOutcome'])->name('update_keluar');
         Route::get('/show-barang-keluar/{id}', [ProductSuppliesController::class, 'showProductOutcome'])->name('show-barang-keluar');
         Route::get('/import_pdfbk', [ProductSuppliesController::class, 'importPDFbk'])->name('import_pdf_bk');
 
@@ -142,7 +142,8 @@ use App\Http\Controllers\Dashboard\BeritaController;
         Route::post('/store-loan-barang-user', [TransactionController::class, 'storeLoanUser']);
         Route::get('/saran-barang-user/{id}', [TransactionController::class, 'saranLoanUser']);
         Route::post('/store-saran-barang-user/{id}', [TransactionController::class, 'storesaranLoanUser']);
-        Route::get('/kembalikan-barang/{id}', [TransactionController::class, 'kembalikanBarang'])->name('kembalikan.barang');
+        Route::get('/kembalikan-barang/{id}', [TransactionController::class, 'returnItem'])->name('kembalikan.barang');
+
         
         // Pengembalian
         Route::get('/return-barang', [ReturnsController::class, 'indexReturn'])->name('return_barang');
@@ -151,14 +152,15 @@ use App\Http\Controllers\Dashboard\BeritaController;
         Route::get('/edit-return-barang/{id}', [ReturnsController::class, 'editReturn']);
         Route::post('/update-return-barang/{id}', [ReturnsController::class, 'updateReturn']);
         Route::delete('/hapus-return-barang/{id}', [ReturnsController::class,'deleteReturn']);
-        Route::get('/saran-barang-userp/{id}', [ReturnsController::class, 'saranLoanUser']);
+        Route::get('/saran-barang-userp/{Id}', [ReturnsController::class, 'showComments']);
+
 
         // Mahasiswa
         Route::get('/mahasiswa', [MahasiswaController::class, 'indexMahasiswa'])->name('mahasiswa');
         Route::get('/input-mahasiswa', [MahasiswaController::class, 'createMahasiswa'])->name('input_mahasiswa');
         Route::post('/store-mahasiswa', [MahasiswaController::class, 'storeMahasiswa'])->name('store_mahasiswa');
         Route::get('/edit-mahasiswa/{id}', [MahasiswaController::class, 'editMahasiswa'])->name('edit_mahasiswa');
-        Route::post('/update-mahasiswa/{id}', [MahasiswaController::class, 'updateMahasiswa']);
+        Route::put('/update-mahasiswa/{id}', [MahasiswaController::class, 'updateMahasiswa']);
         Route::get('/show-mahasiswa/{id}', [MahasiswaController::class, 'showMahasiswa'])->name('mahasiswa_show');
         Route::delete('/hapus-mahasiswa/{id}', [MahasiswaController::class,'deleteMahasiswa'])->name('mahasiswa_delete');
         Route::get('/fetch-and-save-mahasiswa', [MahasiswaController::class, 'fetchAndSaveData']);
@@ -172,7 +174,7 @@ use App\Http\Controllers\Dashboard\BeritaController;
         Route::get('/input-dosen', [DosenController::class, 'createDosen'])->name('input_dosen');
         Route::post('/store-dosen', [DosenController::class, 'storeDosen'])->name('store_dosen');
         Route::get('/edit-dosen/{id}', [DosenController::class, 'editDosen']);
-        Route::post('/update-dosen/{id}', [DosenController::class, 'updateDosen']); 
+        Route::put('/update-dosen/{id}', [DosenController::class, 'updateDosen']); 
         Route::get('/show-dosen/{id}', [DosenController::class, 'showDosen']);
         Route::delete('/hapus-dosen/{id}', [DosenController::class,'deleteDosen']);
         Route::get('/fetch-and-save-dosen', [DosenController::class, 'fetchAndSaveData']);

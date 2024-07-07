@@ -4,7 +4,7 @@
 <div class="container px-4">
     <div class="bg-white p-5 mt-5 rounded-lg">
         <div class="flex">
-            <h2 class="text-gray-600 font-bold">Update Data Mahasiswa</h2>
+            <h2 class="text-gray-600 font-bold">Update Kegiatan Labor</h2>
         </div>
 
         <form action="/update-labor/{{$labor->id}}" method="POST" class="w-full mt-5">
@@ -17,9 +17,9 @@
                         <select name="room_id" class="select-room text-black w-full" id="select-room">
                             <option value="" disabled selected>Pilih Ruangan</option>
                             @foreach($ruangans as $ruangan)
-                                <option class="text-sm" value="{{$ruangan->id}}">{{$ruangan->name}}</option>
+                                <option class="text-sm" value="{{$ruangan->id}}" {{ old('room_id', $labor->room_id) == $ruangan->id ? 'selected' : '' }}>{{$ruangan->name}}</option>
                             @endforeach
-                        </select>
+                        </select>                        
                     </div>
                 </div>
             </div>

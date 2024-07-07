@@ -11,7 +11,6 @@
             @csrf
             @method('PUT')
             <div class="mt-3">
-                {{-- {{ $mahasiswa }} --}}
                 <label class="text-sm text-gray-600" for="nim">NIM</label>
                 <div class="border-2 p-1 @error('nim') border-red-400 @enderror">
                     <input name="nim" value="{{ old('nim', $mahasiswa->nim) }}" class="text-black w-full h-full focus:outline-none text-sm" id="nim" type="text">
@@ -30,10 +29,19 @@
                 @enderror
             </div>
             <div class="mt-3">
-                <label class="text-sm text-gray-600" for="prodi">Jurusan</label>
+                <label class="text-sm text-gray-600" for="jurusan">Jurusan</label>
+                <div class="border-2 p-1 @error('jurusan') border-red-400 @enderror">
+                    <input name="jurusan" value="{{ old('jurusan', $mahasiswa->jurusan) }}" class="text-black w-full h-full focus:outline-none text-sm" id="jurusan" type="text">
+                </div>
+                @error('jurusan')
+                    <p class="italic text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+            <div class="mt-3">
+                <label class="text-sm text-gray-600" for="prodi">Prodi</label>
                 <div class="border-2 p-1 @error('prodi') border-red-400 @enderror">
                     <select name="prodi" id="prodi" class="text-black w-full h-full focus:outline-none text-sm">
-                        <option value="" disabled>Pilih Jurusan</option>
+                        <option value="" disabled>Pilih Prodi</option>
                         <option value="Animasi" {{ old('prodi', $mahasiswa->prodi) == 'Animasi' ? 'selected' : '' }}>Animasi</option>
                         <option value="Teknologi Rekayasa Perangkat Lunak" {{ old('prodi', $mahasiswa->prodi) == 'Teknologi Rekayasa Perangkat Lunak' ? 'selected' : '' }}>Teknologi Rekayasa Perangkat Lunak</option>
                         <option value="Teknik Komputer" {{ old('prodi', $mahasiswa->prodi) == 'Teknik Komputer' ? 'selected' : '' }}>Teknik Komputer</option>
@@ -86,4 +94,18 @@
         </form>
     </div>
 </div>
+@endsection
+
+@section('js')
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const prodiSelect = new Choices('#prodi', {
+            searchEnabled: true,
+            itemSelectText: '',
+            placeholderValue: 'Pilih Prodi',
+            removeItemButton: true,
+        });
+    });
+</script>
 @endsection

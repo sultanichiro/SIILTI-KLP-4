@@ -36,6 +36,7 @@
             <thead>
                 <tr class="font-bold border-b-2 p-2">
                     <td class="p-2">No</td>
+                    <td class="p-2">NIDN</td>
                     <td class="p-2">NIP</td>
                     <td class="p-2">Nama</td>
                     <td class="p-2">Email</td>
@@ -49,6 +50,7 @@
                 @foreach ($dosens as $dosen)
                     <tr class="border-b p-2">
                         <td class="p-2">{{ $noDosen }}</td>
+                        <td class="p-2">{{ $dosen->nidn }}</td>
                         <td class="p-2">{{ $dosen->nip }}</td>
                         <td class="p-2">{{ $dosen->name }}</td>
                         <td class="p-2">{{ $dosen->email }}</td>

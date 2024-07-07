@@ -21,7 +21,7 @@
 <div class="container px-4">
     <div class="bg-white mt-5 p-5 rounded-lg">
         <div class="text-left">
-            <h2 class="text-gray-600 font-bold">Import Data Mahasiswa</h2>
+            <h2 class="text-gray-600 font-bold">Import Data User</h2>
             <a href="/petugas" class="text-sm inline-block bg-gray-700 text-white mt-2 px-2 py-1">Kembali</a>
         </div>
 

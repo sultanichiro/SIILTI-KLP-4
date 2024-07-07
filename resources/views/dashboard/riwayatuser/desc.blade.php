@@ -19,7 +19,7 @@
                 @enderror
             </div>
             <div class="mt-3">
-                <button class="bg-gray-600 text-white w-full p-2 rounded text-sm">Simpan Saran dan Komentar</button>
+                <button class="bg-gray-600 text-white w-full p-2 rounded text-sm">Kirim</button>
             </div>
         </form>
     </div>

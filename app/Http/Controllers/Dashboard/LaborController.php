@@ -54,27 +54,32 @@ class LaborController extends Controller
         return view('dashboard.labor.update', compact('labor', 'ruangans'));
     }
 
-    public function updateLabor(Request $request, Labor $labor)
+    public function updateLabor(Request $request, $id)
     {
-        Log::info('Request Data: ', $request->all());
-
-        $validatedData = $request->validate([
+        $this->validate($request, [
             'room_id'   => 'required|integer|exists:ruangans,id',
             'day'       => 'required|string|max:255',
             'date'      => 'required|date',
             'time'      => 'required|date_format:H:i',
-            'kegiatan'  => 'required'
+            'kegiatan'  => 'required|string|max:255',
         ]);
 
-        Log::info('Validated Data: ', $validatedData);
-
-        $labor->update($validatedData);
-
-        Log::info('Updated Labor: ', $labor->toArray());
-
-        return redirect('/labor')->with('success', 'Kegiatan Labor berhasil diperbarui.');
+        $labor = Labor::findOrFail($id);
+        $updated = $labor->update([
+            'room_id'   => $request->room_id,
+            'day'       => $request->day,
+            'date'      => $request->date,
+            'time'      => $request->time,
+            'kegiatan'  => $request->kegiatan
+        ]);
+    
+        if ($updated) {
+            return redirect('/labor')->with('message', 'Kegiatan Labor berhasil diupdate');
+        } else {
+            return back()->withErrors(['message' => 'Gagal mengupdate kegiatan labor']);
+        }
     }
-
+    
 
     public function deleteLabor($id)
     {

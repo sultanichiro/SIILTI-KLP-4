@@ -19,7 +19,7 @@
                 <a href="/excel/mahasiswa" class="text-sm inline-block bg-green-700 text-white px-2 py-1 items-center justify-center">
                     <i class="ri-file-excel-2-line mr-2"></i>
                 </a>
-                <a href="/input-import-mahasiswa" class="text-sm inline-block bg-green-700 text-white px-2 py-1 items-center justify-center">
+                <a href="/input-import-mahasiswa" id="import-mahasiswa" class="text-sm inline-block bg-green-700 text-white px-2 py-1 items-center justify-center">
                     <i class="ri-upload-2-line mr-2"></i>
                 </a>
                 <form method="get" action="/fetch-and-save-mahasiswa" class="inline-block">
@@ -68,10 +68,10 @@
                                 <a href="{{ route('mahasiswa_show', $mahasiswa->id) }}" class="bg-blue-500 py-1 px-4 rounded text-white">
                                     <i class="ri-information-line"></i>
                                 </a>
-                                <form action="{{ route('mahasiswa_delete', $mahasiswa) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus?')">
+                                <form action="{{ route('mahasiswa_delete', $mahasiswa->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn-delete-mahasiswa bg-red-500 py-1 px-4 rounded text-white">
+                                    <button type="submit" class="bg-red-500 py-1 px-4 rounded text-white">
                                         <i class="ri-delete-bin-line"></i>
                                     </button>
                                 </form>
@@ -87,7 +87,7 @@
                 </tbody>
             </table>
             <div class="mt-5 flex justify-end">
-                <button type="submit" class="text-sm bg-red-700 text-white px-4 py-2 rounded">Delete Selected</button>
+                <button type="button" onclick="deleteSelected()" class="text-sm bg-red-700 text-white px-4 py-2 rounded">Delete Selected</button>
             </div>
         </form>
         <div class="mt-5">
@@ -103,6 +103,40 @@
             checkbox.checked = e.target.checked;
         }
     });
+
+    function confirmDelete(url) {
+        Swal.fire({
+            title: 'Konfirmasi',
+            text: "Apakah Anda yakin ingin menghapus data ini?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Hapus!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = url;
+            }
+        });
+    }
+
+    function deleteSelected() {
+        Swal.fire({
+            title: 'Konfirmasi',
+            text: "Apakah Anda yakin ingin menghapus semua data yang dipilih?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Hapus!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('mass-delete-form').submit();
+            }
+        });
+    }
 </script>
 
 @endsection

@@ -37,10 +37,37 @@
                 @enderror
             </div>
             <div class="mt-3">
+                <label class="text-sm text-gray-600" for="role">Role</label>
+                <div class="@error('role') border-red-400 @enderror border-2 p-1">
+                    <select name="role" class="select-role text-black w-full" id="select-role">
+                        <option value="" disabled>Pilih Role</option>
+                        @foreach ($roles as $role)
+                            <option value="{{ $role->name }}" {{ $officer->hasRole($role->name) ? 'selected' : '' }}>{{ ucfirst($role->name) }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                @error('role')
+                    <p class="italic text-red-500 text-sm mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+            <div class="mt-3">
                 <button class="bg-gray-600 w-full text-white p-2 rounded text-sm">Simpan Data</button>
             </div>
-    </form>
+        </form>
     </div>
 </div>
 @endsection
 
+@section('js')
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const selectRole = new Choices('#select-role', {
+            searchEnabled: true,
+            itemSelectText: '',
+            placeholderValue: 'Pilih Role',
+            removeItemButton: true,
+        });
+    });
+</script>
+@endsection
