@@ -53,6 +53,9 @@
                         <td class="p-2">{{$loan->tanggal_peminjaman}}</td>
                         <td class="p-2">{{$loan->tanggal_pengembalian ? $loan->tanggal_pengembalian : '-'}}</td> 
                         <td class="p-2">
+                        @if ($loan->back)
+                            <span class="text-green-600">Dikembalikan</span>
+                        @else
                             @if ($loan->tanggal_pengembalian)
                                 @php
                                     $now = now();
@@ -69,6 +72,7 @@
                             @else
                                 -
                             @endif
+                        @endif
                         </td>
                         <td class="p-2 flex gap-2">
                             <button data-id="{{ $loan->id }}" class="btn-delete-loan bg-red-500 py-1 px-4 rounded text-white">

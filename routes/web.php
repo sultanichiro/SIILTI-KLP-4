@@ -43,7 +43,8 @@ use App\Http\Controllers\Dashboard\BeritaController;
     Route::get('/forgot-password', [AuthController::class, 'forgot_password'])->name('forgot-password');
     Route::post('/forgot-password', [AuthController::class, 'forgot_password_process'])->name('forgot-password-process');
     Route::get('/validasi-forgot-password/{token}', [AuthController::class, 'validasi_forgot_password'])->name('validasi-forgot-password');
-    Route::post('/validasi-forgot-password-act', [AuthController::class, 'validasi_forgot_password_process'])->name('validasi-forgot-password-act');
+    Route::post('/validasi-forgot-password-act', [AuthController::class, 'validasi_forgot_password_act'])->name('validasi-forgot-password-act');
+
 
     //register
     Route::get('/register', [AuthController::class, 'register'])->name('register');

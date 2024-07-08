@@ -15,7 +15,9 @@ class ResetPassword extends Model
 
     public $incrementing = false; // Primary key tidak incrementing
     protected $fillable = [
-        'email', 'token', 'created_at'
+        'email', 
+        'token', 
+        'created_at'
     ];
 
     public $timestamps = false; // Jika tabel tidak menggunakan kolom created_at dan updated_at
