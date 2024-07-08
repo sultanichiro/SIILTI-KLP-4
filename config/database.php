@@ -54,10 +54,10 @@ return [
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'dump' => [
-		   'dump_binary_path' => 'C:\xampp\mysql\bin', // only the path, so without `mysqldump` or `pg_dump`
-		   'use_single_transaction',
-		   'timeout' => 60 * 5, // 5 minute timeout
-		  // 'exclude_tables' => ['table1', 'table2'],
+		    'dump_binary_path' => 'C:\xampp\mysql\bin', // only the path, so without `mysqldump` or `pg_dump`
+		    'use_single_transaction',
+		    'timeout' => 60 * 5, // 5 minute timeout
+		    'exclude_tables' => ['failed_jobs', 'migrations', 'personal_access_tokens'],
 		   //'add_extra_option' => '--optionname=optionvalue', // for example '--column-statistics=0'
             ],
             'collation' => null,

@@ -23,8 +23,8 @@
         <table class="w-full mt-5 text-sm text-gray-600">
             <thead>
                 <tr class="font-bold border-b-2 p-2">
-                    <td class="p-2">No</td>
-                    <td class="p-2">Log Name</td>
+                    <td class="p-2">No</td>   
+                    <td class="p-2">User</td>
                     <td class="p-2">Keterangan</td>
                     <td class="p-2">Waktu</td>
                 </tr>
@@ -34,7 +34,7 @@
                 @foreach ($activityLogs as $activityLog)
                     <tr class="border-b p-2">
                         <td class="p-2">{{ $noActivityLog }}</td>
-                        <td class="p-2">{{ $activityLog->log_name }}</td>
+                        <td class="p-2">{{ $activityLog->causer->name ?? 'N/A' }}</td>
                         <td class="p-2">{{ $activityLog->description }}</td>
                         <td class="p-2">{{ $activityLog->created_at->format('d/m/Y H:i') }}</td>
                     </tr>

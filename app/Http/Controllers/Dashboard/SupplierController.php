@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Models\Supplier;
-// use Maatwebsite\Excel\Facades\Excel;
-// use App\Exports\SupplierExport;
 use Illuminate\Http\Request;
 
 class SupplierController extends Controller
@@ -84,8 +82,4 @@ class SupplierController extends Controller
         $supplier = Supplier::all();
         return response()->json(['data' => $supplier], 200);
     }
-
-    // public function exportExcel () {
-    //     return Excel::download(new SupplierExport, 'suppliers.xlsx');
-    // }
 }

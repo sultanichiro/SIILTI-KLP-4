@@ -81,9 +81,13 @@
                                 <a href="/show_barang/{{ $product->id }}" class="bg-blue-500 py-1 px-4 rounded text-white">
                                     <i class="ri-information-line"></i>
                                 </a>
-                                <button data-id="{{ $product->id }}" class="btn-delete-product bg-red-500 py-1 px-4 rounded text-white">
-                                    <i class="ri-delete-bin-line"></i>
-                                </button>
+                                <form action="/hapus-barang/{{ $product->id }}" method="POST" class="form-delete">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn-delete-product bg-red-500 py-1 px-4 rounded text-white">
+                                        <i class="ri-delete-bin-line"></i>
+                                    </button>
+                                </form>
                                 <a href="/ubah-barang/{{ $product->id }}" class="bg-yellow-400 py-1 px-4 rounded text-white">
                                     <i class="ri-edit-box-line"></i>
                                 </a>                            
@@ -108,4 +112,31 @@
             </div>
         </div>
     </div>
+
+    @section('js')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.querySelectorAll('.form-delete').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const form = this;
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: "Data ini akan dihapus secara permanen!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+    </script>
+    @endsection
+
 @endsection

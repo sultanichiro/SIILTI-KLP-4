@@ -87,7 +87,7 @@
                 </tbody>
             </table>
             <div class="mt-5 flex justify-end">
-                <button type="button" onclick="deleteSelected()" class="text-sm bg-red-700 text-white px-4 py-2 rounded">Delete Selected</button>
+                <button type="button" onclick="deleteSelected()" class="text-sm bg-red-600 text-white px-3 py-1 rounded">Delete</button>
             </div>
         </form>
         <div class="mt-5">

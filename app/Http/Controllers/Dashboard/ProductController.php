@@ -13,11 +13,9 @@ use App\Models\Product;
 use App\Models\Supplier;
 use App\Models\Category;
 use App\Models\Ruangan;
-use Illuminate\Support\Facades\Process;
-use Exel;
-use App\Imports\UserImports;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Imports\ProductImport;
+use Spatie\Activitylog\Models\Activity;
 
 class ProductController extends Controller
 {
@@ -40,9 +38,7 @@ class ProductController extends Controller
 
         return view('dashboard.products.index', ['products' => $products]);
     }
-
-        // Contoh di dalam controller
-    // Di dalam controller untuk index-pimpinan
+    
     public function indexPimpinan(Request $request)
     {
         $products = Product::query()
@@ -56,14 +52,18 @@ class ProductController extends Controller
         return view('dashboard.products.indexpimpinan', compact('products'));
     }
 
-
-
     public function massValidate(Request $request)
     {
         $productIds = $request->input('selected_products');
 
         if ($productIds) {
             Product::whereIn('id', $productIds)->update(['verified' => true]);
+
+            // Log activity
+            activity()
+                ->causedBy(auth()->user())
+                ->log('Validated selected products');
+
             return redirect()->back()->with('message', 'Selected products have been validated.');
         }
 
@@ -72,30 +72,44 @@ class ProductController extends Controller
 
     public function importPDF()
     {
-        // $products = Product::all();
-        $pdf = Pdf::loadView('dashboard.products.pdf', ['products'=>Product::all()]);
+        $pdf = Pdf::loadView('dashboard.products.pdf', ['products' => Product::all()]);
         return $pdf->stream('product.pdf');
     }
 
-    public function delete ($id) {
+    public function delete($id)
+    {
         $product = Product::findOrFail($id);
-        Storage::delete($product->image);
+    
+        if ($product->image) {
+            Storage::delete($product->image);
+        }
+    
         $deletedProduct = $product->delete();
-
-        if($deletedProduct){
-            session()->flash('message', 'berhasil hapus data');
-            return response()->json(['message'=> 'success delete data'],200);
+    
+        if ($deletedProduct) {
+            // Log activity
+            activity()
+                ->performedOn($product)
+                ->causedBy(auth()->user())
+                ->log('Menghapus Barang');
+    
+            session()->flash('message', 'Berhasil hapus data');
+            return redirect('/barang')->with('message', 'Berhasil hapus data');
+        } else {
+            return redirect('/barang')->with('error', 'Gagal hapus data');
         }
     }
 
-    public function create () {
+    public function create() 
+    {
         $category = Category::all();
         $supplier = Supplier::all();
         $ruangan  = Ruangan::all();
         return view('dashboard.products.input', ['categories'=> $category, 'suppliers'=>$supplier, 'ruangans'=>$ruangan]);
     }
 
-    public function store(Request $request) {
+    public function store(Request $request) 
+    {
         $validated = $this->validate($request, [
             'kode_barang'  => ['required'],
             'name'         => ['required'],
@@ -119,8 +133,15 @@ class ProductController extends Controller
             'category_id'  => $request->category_id,
             'room_id'      => $request->room_id,
         ]);
-    
+
         if ($created) {
+            // Log activity
+            activity()
+                ->performedOn($created)
+                ->causedBy(auth()->user())
+                ->withProperties(['attributes' => $request->all()])
+                ->log('Menambahkan barang');
+    
             return redirect('/barang')->with('message', 'berhasil menambahkan data');
         }
     }
@@ -131,8 +152,8 @@ class ProductController extends Controller
         return view('dashboard.products.show', compact('product'));
     }
 
-
-    public function edit ($id) {
+    public function edit($id) 
+    {
         $product  = Product::findOrFail($id);
         $category = Category::all();
         $supplier = Supplier::all();
@@ -145,7 +166,8 @@ class ProductController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id) 
+    {
         $validated = $this->validate($request, [
             'kode_barang'  => ['required'],
             'name'         => ['required'],
@@ -157,7 +179,6 @@ class ProductController extends Controller
     
         $productWithId = Product::findOrFail($id);
     
-        // Hapus gambar lama jika ada
         Storage::disk('public')->delete('foto_barang/'.$productWithId->image);
     
         $image = $request->file('image');
@@ -176,77 +197,76 @@ class ProductController extends Controller
         ]);
     
         if ($updated) {
+            // Log activity
+            activity()
+                ->performedOn($productWithId)
+                ->causedBy(auth()->user())
+                ->withProperties(['attributes' => $request->all()])
+                ->log('Mengubah Barang');
+    
             return redirect('/barang')->with('message', 'berhasil update data');
         }
     }
-    
 
-    public function getAllProducts () {
+    public function getAllProducts() 
+    {
         $products = Product::all();
         return response()->json(['data' => $products], 200);
     }
 
-    public function exportExcel () {
+    public function exportExcel() 
+    {
         return Excel::download(new ProductExport, 'product.xlsx');
     }
 
-    public function getImportExcel () {
+    public function getImportExcel() 
+    {
         return view('dashboard.products.import');
     }
 
-        public function importProduct(Request $request)
+    public function importProduct(Request $request)
     {
         $request->validate([
-            'file' => 'required|mimes:xlsx,xls', // Validasi untuk jenis file yang diunggah
+            'file' => 'required|mimes:xlsx,xls',
         ]);
 
         try {
             Excel::import(new ProductImport(), $request->file('file'));
 
+            // Log activity
+            activity()
+                ->causedBy(auth()->user())
+                ->log('Mengimport data barang');
+
             return redirect('/barang')->with('message', 'Data Barang berhasil diimpor.');
         } catch (\Exception $e) {
-            Log::error('Import Error: ' . $e->getMessage()); // Logging error
+            Log::error('Import Error: ' . $e->getMessage());
             return redirect('/barang')->with('error', 'Terjadi kesalahan saat mengimpor data barang: ' . $e->getMessage());
         }
     }
 
-
-    public function massDelete(Request $request)
-{
-    $ids = $request->input('selected_products');
-    if (!empty($ids)) {
-        // Hapus data yang berhubungan di tabel product_supplies
-        DB::table('product_supplies')->whereIn('product_id', $ids)->delete();
-        
-        // Hapus data di tabel products
-        Product::whereIn('id', $ids)->delete();
-        return redirect()->back()->with('message', 'Selected products deleted successfully.');
-    }
-    return redirect()->back()->with('message', 'No products selected.');
-}
-
-
-    public function indexhome (Request $request) {
-        if($request->has('search')){
+    public function indexhome(Request $request) 
+    {
+        if ($request->has('search')) {
             $products = DB::table('products')
-            ->join('categories', 'products.category_id', '=' , 'categories.id')
-            ->where('products.name', "LIKE","%{$request->search}%")
-            ->select('products.*','categories.name as category')
-            ->orderBy('products.created_at')
-            ->paginate(10);
+                ->join('categories', 'products.category_id', '=', 'categories.id')
+                ->where('products.name', "LIKE","%{$request->search}%")
+                ->select('products.*','categories.name as category')
+                ->orderBy('products.created_at')
+                ->paginate(10);
         } else {
-             $products = DB::table('products')
-            ->join('categories', 'products.category_id', '=' , 'categories.id')
-            ->select('products.*','categories.name as category')
-            ->orderBy('products.created_at')
-            ->paginate(10);
+            $products = DB::table('products')
+                ->join('categories', 'products.category_id', '=', 'categories.id')
+                ->select('products.*','categories.name as category')
+                ->orderBy('products.created_at')
+                ->paginate(10);
         }
 
-        if ($request->get('export') == 'pdf'){
+        if ($request->get('export') == 'pdf') {
             $pdf = Pdf::loadView('pdf.products', ['products' => $products]);
-            return $pdf->stream('data barang.pdf');   
+            return $pdf->stream('data barang.pdf');
         }
 
-        return view('layouts.barang', ['products'=>$products]);
+        return view('home', ['products' => $products]);
     }
 }

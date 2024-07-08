@@ -50,7 +50,8 @@ use App\Http\Controllers\Dashboard\BeritaController;
     Route::get('/register', [AuthController::class, 'register'])->name('register');
     Route::post('/register-proses', [AuthController::class, 'registerproses'])->name('register-proses');
 
-    Route::middleware('auth')->group(function () {
+    Route::middleware('auth')->group(function () 
+    {
         // Dashboard
         Route::get('/overview', [OverviewController::class, 'index']);
 
@@ -69,8 +70,6 @@ use App\Http\Controllers\Dashboard\BeritaController;
         Route::get('/input-import-products',[ProductController::class,'getImportExcel']);
         Route::post('/import/product',[ProductController::class,'importProduct'])->name('import_excel');
         Route::get('/import_pdf',[ProductController::class,'importPDF'])->name('import_PDF');
-        Route::post('/mass-delete-products', [ProductController::class, 'massDelete'])->name('mass_delete_products');
-
 
         // Supplier
         Route::get('/supplier', [SupplierController::class,'index']);
@@ -155,7 +154,6 @@ use App\Http\Controllers\Dashboard\BeritaController;
         Route::delete('/hapus-return-barang/{id}', [ReturnsController::class,'deleteReturn']);
         Route::get('/saran-barang-userp/{Id}', [ReturnsController::class, 'showComments']);
 
-
         // Mahasiswa
         Route::get('/mahasiswa', [MahasiswaController::class, 'indexMahasiswa'])->name('mahasiswa');
         Route::get('/input-mahasiswa', [MahasiswaController::class, 'createMahasiswa'])->name('input_mahasiswa');
@@ -206,8 +204,7 @@ use App\Http\Controllers\Dashboard\BeritaController;
 
         // Berita
         Route::get('/berita', [BeritaController::class, 'Berita'])->name('berita');
-
-});
+    });
     
     //logout
     Route::get('/logout',[AuthController::class, 'logout']);

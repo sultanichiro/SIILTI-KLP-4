@@ -16,10 +16,10 @@
                     <a href="/input-barang-masuk" class="text-sm inline-block bg-blue-700 text-white px-2 py-1 items-center justify-center">
                         <i class="ri-add-line"></i>
                     </a>
+                    @endcan
                     <a href="/import_pdfbm" target="_blank" class="text-sm inline-block bg-red-700 text-white px-2 py-1 items-center justify-center">
                         <i class="ri-file-pdf-line mr-2"></i>
                     </a>
-                    @endcan
                 </div>
                 <form method="get" action="/barang-masuk" class="form">
                     <div class="flex">
@@ -40,7 +40,9 @@
                         <td class="p-2">Supplier</td>
                         <td class="p-2">Jumlah Barang Masuk</td>
                         <td class="p-2">Tanggal Masuk</td>
+                        @can('view_report')
                         <td class="p-2">Aksi</td>
+                        @endcan
                     </tr>
                 </thead>
                 <tbody>
@@ -52,6 +54,7 @@
                         <td class="p-2">{{$productIncome->supplier->name}}</td>
                         <td class="p-2">{{$productIncome->quantity}}</td>
                         <td class="p-2">{{$productIncome->date}}</td>
+                        @can('view_report')
                         <td class="p-2 flex gap-2">
                             <button data-id="{{$productIncome->id}}" class="btn-delete-product-income bg-red-500 py-1 px-4 rounded text-white">
                                 <i class="ri-delete-bin-line"></i>
@@ -60,6 +63,7 @@
                                 <i class="ri-edit-box-line"></i>
                             </a>
                         </td>
+                        @endcan
                     </tr>
                     @endforeach
                 </tbody>

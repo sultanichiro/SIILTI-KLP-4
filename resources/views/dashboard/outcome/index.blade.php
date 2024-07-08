@@ -16,11 +16,10 @@
                         <a href="/input-barang-keluar" class="text-sm inline-block bg-blue-700 text-white px-2 py-1 items-center justify-center">
                             <i class="ri-add-line"></i>
                         </a>
-                        <a href="{{ route('import_pdf_bk') }}" target="_blank" class="text-sm inline-block bg-red-700 text-white px-2 py-1 items-center justify-center">
-                            <i class="ri-file-pdf-line mr-2"></i>
-                        </a>
-                        
-                    @endcan    
+                    @endcan
+                    <a href="{{ route('import_pdf_bk') }}" target="_blank" class="text-sm inline-block bg-red-700 text-white px-2 py-1 items-center justify-center">
+                        <i class="ri-file-pdf-line mr-2"></i>
+                    </a>    
                 </div>
                 <form method="get" action="//barang-masuk" class="form">
                     <div class="flex">
@@ -40,7 +39,9 @@
                         <td class="p-2">Nama Mahasiswa</td>
                         <td class="p-2">Jumlah Barang</td>
                         <td class="p-2">Tanggal Keluar</td>
+                        @can('view_report')
                         <td class="p-2">Aksi</td>
+                        @endcan
                     </tr>
                 </thead>
                 <tbody>
@@ -51,6 +52,7 @@
                         <td class="p-2">{{$productOutcome->name}}</td>
                         <td class="p-2">{{$productOutcome->quantity}}</td>
                         <td class="p-2">{{$productOutcome->date}}</td>
+                        @can('view_report')
                         <td class="p-2 flex gap-2">
                             <a href="/show-barang-keluar/{{ $productOutcome->id }}" class="bg-blue-500 py-1 px-4 rounded text-white">
                                 <i class="ri-information-line"></i>
@@ -62,6 +64,7 @@
                                 <i class="ri-edit-box-line"></i>
                             </a>
                         </td>
+                        @endcan
                     </tr>
                     @endforeach
                 </tbody>

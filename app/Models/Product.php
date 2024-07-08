@@ -4,14 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Traits\LogsActivity;
 
 class Product extends Model
 {
     use HasFactory;
-    use LogsActivity;
-
     protected $primaryKey = 'id';
 
     protected $fillable = [
@@ -25,13 +21,6 @@ class Product extends Model
         'desc',
         'verified'
     ];
-
-    public function getActivitylogOptions(): LogOptions
-    {
-        return LogOptions::defaults()
-        ->logUnguarded();
-        // Chain fluent methods for configuration options
-    }
 
     public function category()
     {

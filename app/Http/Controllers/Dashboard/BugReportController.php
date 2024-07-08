@@ -27,6 +27,11 @@ class BugReportController extends Controller
         $bugReport->description = $description;
         $bugReport->save();
 
+        // Catat aktivitas menggunakan Spatie Activity Log
+        activity()
+            ->causedBy($user_id)
+            ->log('Mengirim laporan bug'); // Deskripsi aktivitas
+
         // Optional: Tambahkan pesan sukses atau lakukan tindakan lain setelah penyimpanan
         return redirect()->back()->with('success', 'Laporan bug telah berhasil dikirim!');
     }

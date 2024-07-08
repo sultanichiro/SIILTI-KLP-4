@@ -95,7 +95,6 @@
                         <td class="p-2">Nama Barang</td>
                         <td class="p-2">Jumlah Barang</td>
                         <td class="p-2">Kategori Barang</td>
-                        <td class="p-2">Detail</td>
                     </tr>
                 </thead>
                 <tbody>
@@ -109,20 +108,6 @@
                             <td class="p-2">{{$product->name}}</td>
                             <td class="p-2">{{$product->stock}}</td>
                             <td class="p-2">{{$product->category}}</td>
-                            <td class="p-2 flex gap-2">
-                                <a href="/show_barang/{{ $product->id }}" class="bg-blue-500 py-1 px-4 rounded text-white">
-                                    <i class="ri-information-line"></i>
-                                </a>
-                                @can('view_peminjaman')
-                                <button data-id="{{ $product->id }}" class="btn-delete-product bg-red-500 py-1 px-4 rounded text-white">
-                                    <i class="ri-delete-bin-line"></i>
-                                </button>
-                                <a href="/ubah-barang/{{ $product->id }}" class="bg-yellow-400 py-1 px-4 rounded text-white">
-                                    <i class="ri-edit-box-line"></i>
-                                </a>
-                                @endcan
-                            </td>
-                            
                         </tr>
                         @php
                             $noProduct++;

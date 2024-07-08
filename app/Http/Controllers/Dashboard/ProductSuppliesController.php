@@ -8,6 +8,7 @@ use App\Models\Supplier;
 use App\Models\ProductSupplies;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Activitylog\Models\Activity; // Import model Activity
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class ProductSuppliesController extends Controller
@@ -55,7 +56,12 @@ class ProductSuppliesController extends Controller
 
        if($created && $quantityUpdated)
        {
-        return redirect('/barang-masuk')->with('message', 'data berhasil ditambahkan');
+        // Catat aktivitas menggunakan Spatie Activity Log
+        activity()
+            ->causedBy(Auth::user())
+            ->log('Menambahkan barang masuk');
+
+        return redirect('/barang-masuk')->with('message', 'Data berhasil ditambahkan');
        }
     }
 
@@ -89,7 +95,12 @@ class ProductSuppliesController extends Controller
 
         if($updated)
         {
-            return redirect('/barang-masuk')->with('message', 'data berhasil diubah');
+            // Catat aktivitas menggunakan Spatie Activity Log
+            activity()
+                ->causedBy(Auth::user())
+                ->log('Mengubah barang masuk');
+
+            return redirect('/barang-masuk')->with('message', 'Data berhasil diubah');
         }
     }
 
@@ -103,7 +114,7 @@ class ProductSuppliesController extends Controller
             'products' => $products
         ]);
 
-        return $pdf->download('laporan-barang-masuk.pdf');
+        return $pdf->stream('laporan-barang-masuk.pdf');
     }
 
     public function indexOutcome() 
@@ -150,7 +161,12 @@ class ProductSuppliesController extends Controller
 
        if($created && $quantityUpdated)
        {
-        return redirect('/barang-keluar')->with('message', 'data berhasil ditambahkan');
+        // Catat aktivitas menggunakan Spatie Activity Log
+        activity()
+            ->causedBy(Auth::user())
+            ->log('Menambahkan barang keluar');
+
+        return redirect('/barang-keluar')->with('message', 'Data berhasil ditambahkan');
        }
     }
 
@@ -189,6 +205,11 @@ class ProductSuppliesController extends Controller
         // Lakukan perhitungan atau pembaruan lainnya jika diperlukan
 
         if ($updated) {
+            // Catat aktivitas menggunakan Spatie Activity Log
+            activity()
+                ->causedBy(Auth::user())
+                ->log('Mengubah barang keluar');
+
             return redirect('/barang-keluar')->with('message', 'Data berhasil diubah');
         } else {
             // Handle kesalahan jika pembaruan gagal
@@ -213,7 +234,8 @@ class ProductSuppliesController extends Controller
             'supplier' => $supplier
         ]);
 
-        return $pdf->download('laporan-barang-keluar.pdf');
+        return $pdf->stream('laporan-barang-keluar.pdf');
+
     }
 
     public function deleteProductSupply($id) 
@@ -230,8 +252,13 @@ class ProductSuppliesController extends Controller
 
         if($deleted && $updated)
         {
-            session()->flash('message', 'berhasil hapus data');
-            return response()->json(['message'=> 'success delete data'],200);
+            // Catat aktivitas menggunakan Spatie Activity Log
+            activity()
+                ->causedBy(Auth::user())
+                ->log('Menghapus barang keluar/masuk');
+
+            session()->flash('message', 'Berhasil hapus data');
+            return response()->json(['message'=> 'Success delete data'],200);
         }
     }
 }

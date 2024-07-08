@@ -45,7 +45,7 @@
                     <td class="p-2">{{ $return->quantity }}</td>
                     <td class="p-2">{{ $return->tanggal_pengembalian }}</td>
                     <td class="p-2 flex gap-2">
-                        <a href="/saran-barang-user/{{ $return->id }}" class="bg-orange-500 py-1 px-4 rounded text-white">
+                        <a href="/saran-barang-userp/{{ $return->id }}" class="bg-orange-500 py-1 px-4 rounded text-white">
                             <i class="ri-chat-1-line"></i>
                         </a>
                     </td>
@@ -59,7 +59,7 @@
                     <td class="p-2">{{ $return->quantity_returned }}</td>
                     <td class="p-2">{{ $return->tanggal_pengembalian }}</td>
                     <td class="p-2 flex gap-2">
-                        <a href="/saran-barang-user/{{ $return->id }}" class="bg-red-500 py-1 px-4 rounded text-white">
+                        <a href="/saran-barang-userp/{{ $return->id }}" class="bg-red-500 py-1 px-4 rounded text-white">
                             <i class="ri-chat-1-line"></i>
                         </a>
                     </td>

@@ -8,7 +8,8 @@ use Spatie\Activitylog\Models\Activity;
 
 class ActivityUserController extends Controller
 {
-    public function index(Request $request){
+    public function index(Request $request)
+    {
         $search = $request->input('search');
 
         $query = Activity::query();
@@ -18,7 +19,8 @@ class ActivityUserController extends Controller
                   ->orWhere('description', 'like', "%{$search}%");
         }
 
-        $activityLogs = $query->paginate(10); // Pastikan menggunakan paginate
+        // Urutkan aktivitas berdasarkan waktu secara descending (terbaru dulu)
+        $activityLogs = $query->latest()->paginate(10);
 
         return view('dashboard.activitylog.index', compact('activityLogs'));
     }

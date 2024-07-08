@@ -54,6 +54,10 @@ class TransactionController extends Controller
         // Kurangi stok produk
         $product->decrement('stock', $request->quantity);
 
+        activity()
+            ->causedBy(auth()->user())
+            ->log('Melakukan Peminjaman');
+
         return redirect('/loan-barang')->with('message', 'Data peminjaman berhasil disimpan.');
     }
 
@@ -94,6 +98,10 @@ class TransactionController extends Controller
         $product->stock += $transaction->quantity - $request->quantity; // Mengembalikan stok yang dikurangi sebelumnya
         $product->save();
     
+        activity()
+            ->causedBy(auth()->user())
+            ->log('Mengubah Peminjaman');
+
         return redirect('/loan-barang')->with('success', 'Data Peminjaman berhasil diperbarui.');
     }
 
@@ -101,6 +109,10 @@ class TransactionController extends Controller
     {
         $loan = Transaction::findOrFail($id);
         $loan->delete();
+
+        activity()
+            ->causedBy(auth()->user())
+            ->log('Menghapus Peminjaman');
 
         return response()->json(['success' => true]);
     }
@@ -159,6 +171,10 @@ class TransactionController extends Controller
         // Kurangi stok produk
         $product->decrement('stock', $request->quantity);
 
+        activity()
+            ->causedBy(auth()->user())
+            ->log('Melakukan Peminjaman');
+
         return redirect('/riwayat-loan-barang')->with('message', 'Data peminjaman berhasil disimpan.');
     }
 
@@ -179,7 +195,9 @@ class TransactionController extends Controller
             'desc' => $request->desc,
         ]);
 
-        //  \Log::info('Transaction updated: ', $loans);
+        activity()
+            ->causedBy(Auth::user())
+            ->log('Menambahkan saran atau komentar pada transaksi peminjaman');
     
          if ($updated) {
             return redirect('/riwayat-loan-barang')->with('message', 'Saran atau komentar berhasil disimpan.');
@@ -193,6 +211,10 @@ class TransactionController extends Controller
         $loan = Transaction::findOrFail($id);
         $loan->back = true;
         $loan->save();
+
+        activity()
+            ->causedBy(Auth::user())
+            ->log('Barang telah dikembalikan dari transaksi peminjaman');
 
         return redirect()->back()->with('message', 'Barang berhasil dikembalikan');
     }

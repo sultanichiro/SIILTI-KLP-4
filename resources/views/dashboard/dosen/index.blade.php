@@ -58,13 +58,9 @@
                             <a href="/show-dosen/{{  $dosen->id }}" class="bg-blue-500 py-1 px-4 rounded text-white">
                                 <i class="ri-information-line"></i>
                             </a>                            
-                            <form action="/hapus-dosen/{{$dosen->id}}" method="POST" onsubmit="return confirm('Yakin ingin menghapus?')">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn-delete-dosen bg-red-500 py-1 px-4 rounded text-white">
-                                    <i class="ri-delete-bin-line"></i>
-                                </button>
-                            </form>
+                            <button type="button" class="btn-delete-dosen bg-red-500 py-1 px-4 rounded text-white" data-id="{{ $dosen->id }}">
+                                <i class="ri-delete-bin-line"></i>
+                            </button>
                             <a href="/edit-dosen/{{$dosen->id}}" class="bg-yellow-400 py-1 px-4 rounded text-white">
                                 <i class="ri-edit-box-line"></i>
                             </a>
@@ -84,7 +80,49 @@
 
 <!-- Plugins Link -->
 @section('js')
-<script src="https://cdn.jsdelivr.net/npm/@glidejs/glide"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.querySelectorAll('.btn-delete-dosen').forEach(button => {
+        button.addEventListener('click', function () {
+            const id = this.getAttribute('data-id');
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Data ini akan dihapus secara permanen!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`/hapus-dosen/${id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        }
+                    }).then(response => {
+                        if (response.ok) {
+                            Swal.fire(
+                                'Terhapus!',
+                                'Data dosen telah dihapus.',
+                                'success'
+                            ).then(() => {
+                                window.location.reload();
+                            });
+                        } else {
+                            Swal.fire(
+                                'Gagal!',
+                                'Terjadi kesalahan saat menghapus data dosen.',
+                                'error'
+                            );
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
 @endsection
 
 @endsection

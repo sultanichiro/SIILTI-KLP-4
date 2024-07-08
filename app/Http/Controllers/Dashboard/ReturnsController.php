@@ -46,10 +46,14 @@ class ReturnsController extends Controller
 
         $product->increment('stock', $request->quantity_returned);
 
+        activity()
+            ->causedBy(Auth::user())
+            ->log('Mengembalikan barang dari transaksi');
+
         return redirect('/return-barang')->with('message', 'Berhasil Mengembalikan Barang.');
     }
 
-    public function saranLoanUser($id)
+    public function showComments($id)
     {
         $transaction = Transaction::findOrFail($id);
         return view('dashboard.return.show', compact('transaction'));
