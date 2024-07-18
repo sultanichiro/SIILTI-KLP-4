@@ -13,9 +13,6 @@
         <div class="flex justify-between">
             <div class="text-left">
                 <h2 class="text-gray-600 font-bold">Data Peminjaman</h2>
-                <a href="/input-loan-barang" class="text-sm inline-block bg-blue-700 text-white px-2 py-1 items-center justify-center">
-                    <i class="ri-add-line"></i>
-                </a>
             </div>
             <form method="get" action="/loan-barang" class="form">
                 <div class="flex">

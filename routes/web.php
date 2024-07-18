@@ -106,6 +106,7 @@ use App\Http\Controllers\Dashboard\BeritaController;
         Route::delete('/hapus-admin/{id}', [UserController::class, 'delete']);
         Route::get('/ubah-admin/{id}', [UserController::class, 'editAdmin']);
         Route::post('/ubah-admin/{id}', [UserController::class, 'updateAdmin']);
+        Route::delete('/hapus-admin/{id}', [UserController::class, 'deleteAdmin']);
 
         // Barang Masuk
         Route::get('/barang-masuk', [ProductSuppliesController::class, 'indexIncome']);

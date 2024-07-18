@@ -26,9 +26,9 @@
         <div class="bg-white rounded-lg p-5 shadow-md">
             <img src="logo-tekinfo.jpg" alt="Activity Log" class="w-full h-auto rounded-t-lg">
             <div class="p-4">
-                <h2 class="text-gray-600 font-bold">Activity Log</h2>
+                <h2 class="text-gray-600 font-bold">Activity User</h2>
                 <div class="mt-3">
-                    <p>Ini adalah halaman untuk menampilkan kategori "Activity Log".</p>
+                    <p>Ini adalah halaman untuk menampilkan kategori "Activity User".</p>
                     <a href="/activity-logs" class="text-sm inline-block bg-blue-700 text-white px-2 py-1 rounded">
                         Selengkapnya
                     </a>

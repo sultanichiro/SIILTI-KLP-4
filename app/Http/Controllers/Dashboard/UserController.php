@@ -79,6 +79,14 @@ class UserController extends Controller
         }
     }
 
+    public function deleteAdmin($id)
+    {
+        $admin = User::findOrFail($id);
+        $admin->delete();
+
+        return response()->json(['success' => true]);
+    }
+
     public function officer(Request $request) 
     {
         $roles = ['mahasiswa', 'pimpinan', 'dosen_staff'];
@@ -106,7 +114,7 @@ class UserController extends Controller
             'name' => ['required'],
             'email' => ['required', 'email', 'unique:users,email'],
             'password' => ['required', 'min:6'],
-            'role' => ['required', 'exists:roles,name']
+            // 'role' => ['required', 'exists:roles,name']
         ]);
 
         $user = User::create([
